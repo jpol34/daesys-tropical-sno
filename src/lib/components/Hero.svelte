@@ -37,7 +37,7 @@
 			Tropical vibes & icy delights in Arlington, TX
 		</p>
 		<p class="hero-flavors">
-			<span class="hero-highlight">40+ Flavors</span> • <span class="hero-highlight">56 Signature Concoctions</span>
+			<span class="hero-highlight">40+ Flavors</span> • <span class="hero-highlight">56 Signature Concoctions</span> • <span class="hero-highlight">Events & Parties</span>
 		</p>
 		<div class="hero-hours">
 			<span>{businessInfo.hours.display}</span>
@@ -183,8 +183,7 @@
 		display: inline-flex;
 		align-items: center;
 		gap: var(--space-sm);
-		background: rgba(255, 255, 255, 0.15);
-		backdrop-filter: blur(4px);
+		background: var(--color-blue);
 		padding: var(--space-sm) var(--space-md);
 		border-radius: var(--radius-full);
 		color: var(--color-white);

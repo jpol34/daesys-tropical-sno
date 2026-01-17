@@ -139,7 +139,7 @@
 		flex-direction: column;
 		align-items: center;
 		padding: var(--space-sm);
-		background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-white) 100%);
+		background: var(--color-yellow);
 		border-radius: var(--radius-md);
 		transition: transform var(--transition-fast);
 	}
