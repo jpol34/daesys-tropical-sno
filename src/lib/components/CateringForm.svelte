@@ -162,7 +162,7 @@
 <section id="catering" class="catering-section" aria-labelledby="catering-heading">
 	<div class="container">
 		<div class="catering-header">
-			<h2 id="catering-heading" class="section-title">Book Us For Your Event</h2>
+			<h2 id="catering-heading" class="section-title">Your Event, But Cooler</h2>
 			<p class="catering-subtitle">
 				Birthday parties, weddings, corporate events and more! Fill out the form below and we'll get back to you within 24 hours.
 			</p>
