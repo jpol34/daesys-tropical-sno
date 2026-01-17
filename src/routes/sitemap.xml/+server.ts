@@ -1,6 +1,6 @@
 import type { RequestHandler } from './$types';
 
-const SITE_URL = 'https://daesystropicalsno.com';
+const SITE_URL = 'https://daesyssno.com';
 
 export const GET: RequestHandler = async () => {
 	const pages = [
