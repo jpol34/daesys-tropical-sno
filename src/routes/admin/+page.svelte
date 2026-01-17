@@ -2006,7 +2006,7 @@
 		cursor: pointer;
 	}
 	
-	.punch-dot:not(.filled):hover {
+	.punch-dot:not(.filled):not(.preview):hover {
 		border-color: var(--color-blue);
 		background: var(--color-gray-100);
 	}
