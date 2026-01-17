@@ -1,20 +1,26 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- Glass/bowl -->
-  <path d="M6 14 L26 14 L24 28 Q24 30, 22 30 L10 30 Q8 30, 8 28 Z" fill="#87CEEB" stroke="#5BA3D0" stroke-width="0.5"/>
+  <!-- Sno cone cup -->
+  <path d="M8 14 L24 14 L20 30 L12 30 Z" fill="#FFD700" stroke="#E5C100" stroke-width="1"/>
   
-  <!-- Shaved ice dome - blue and yellow layers -->
-  <ellipse cx="16" cy="14" rx="11" ry="6" fill="#1E5799"/>
-  <path d="M5 14 Q8 8, 16 6 Q24 8, 27 14 Q22 10, 16 9 Q10 10, 5 14" fill="#FFD700"/>
-  <path d="M7 13 Q10 9, 16 7.5 Q22 9, 25 13 Q20 10, 16 9.5 Q12 10, 7 13" fill="#1E5799"/>
+  <!-- Cup stripes -->
+  <path d="M9 17 L23 17" stroke="#E5C100" stroke-width="0.5"/>
+  <path d="M10 20 L22 20" stroke="#E5C100" stroke-width="0.5"/>
+  <path d="M11 23 L21 23" stroke="#E5C100" stroke-width="0.5"/>
+  <path d="M11.5 26 L20.5 26" stroke="#E5C100" stroke-width="0.5"/>
   
-  <!-- Ice texture/sparkles -->
-  <circle cx="10" cy="11" r="1.2" fill="rgba(255,255,255,0.7)"/>
-  <circle cx="16" cy="9" r="1" fill="rgba(255,255,255,0.8)"/>
-  <circle cx="22" cy="11" r="1.1" fill="rgba(255,255,255,0.7)"/>
-  <circle cx="13" cy="12" r="0.8" fill="rgba(255,255,255,0.5)"/>
-  <circle cx="19" cy="10" r="0.7" fill="rgba(255,255,255,0.6)"/>
+  <!-- Shaved ice dome - rainbow layers -->
+  <ellipse cx="16" cy="14" rx="10" ry="6" fill="#1E5799"/>
+  <path d="M6 14 Q10 10, 16 8 Q22 10, 26 14 Q22 12, 16 11 Q10 12, 6 14" fill="#E63946"/>
+  <path d="M7 13 Q11 10, 16 9 Q21 10, 25 13 Q21 11, 16 10.5 Q11 11, 7 13" fill="#FFD700"/>
   
-  <!-- Spoon -->
-  <ellipse cx="25" cy="4" rx="3" ry="1.5" fill="#FFD700" transform="rotate(35 25 4)"/>
-  <path d="M23 5 L18 18" stroke="#FFD700" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Ice texture dots -->
+  <circle cx="10" cy="12" r="0.8" fill="rgba(255,255,255,0.6)"/>
+  <circle cx="14" cy="10" r="0.6" fill="rgba(255,255,255,0.6)"/>
+  <circle cx="18" cy="11" r="0.7" fill="rgba(255,255,255,0.6)"/>
+  <circle cx="22" cy="12" r="0.6" fill="rgba(255,255,255,0.6)"/>
+  <circle cx="16" cy="13" r="0.5" fill="rgba(255,255,255,0.6)"/>
+  
+  <!-- Small palm tree accent -->
+  <path d="M26 6 Q24 4, 22 5 M26 6 Q28 4, 29 5 M26 6 Q26 3, 27 2" stroke="#228B22" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <path d="M26 6 L26 10" stroke="#8B4513" stroke-width="1.5" stroke-linecap="round"/>
 </svg>
