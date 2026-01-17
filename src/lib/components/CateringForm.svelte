@@ -166,6 +166,17 @@
 			<p class="catering-subtitle">
 				Birthday parties, weddings, corporate events, and more! Fill out the form below and we'll get back to you within 24 hours.
 			</p>
+			
+			<div class="catering-pricing">
+				<div class="pricing-highlight">
+					<span class="highlight-icon" aria-hidden="true">🚐</span>
+					<span><strong>No travel fees</strong> — we come to you!</span>
+				</div>
+				<div class="pricing-highlight">
+					<span class="highlight-icon" aria-hidden="true">🍧</span>
+					<span><strong>$3 per sno cone</strong> for events</span>
+				</div>
+			</div>
 		</div>
 		
 		{#if isSubmitted}
@@ -426,6 +437,37 @@
 		color: var(--color-gray-600);
 		max-width: 600px;
 		margin: 0 auto;
+	}
+	
+	.catering-pricing {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-sm);
+		margin-top: var(--space-lg);
+		align-items: center;
+	}
+	
+	.pricing-highlight {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-sm);
+		background: linear-gradient(135deg, var(--color-yellow) 0%, var(--color-yellow-light) 100%);
+		padding: var(--space-sm) var(--space-lg);
+		border-radius: var(--radius-full);
+		font-size: 1rem;
+		color: var(--color-gray-900);
+		box-shadow: var(--shadow-sm);
+	}
+	
+	.highlight-icon {
+		font-size: 1.2em;
+	}
+	
+	@media (min-width: 640px) {
+		.catering-pricing {
+			flex-direction: row;
+			justify-content: center;
+		}
 	}
 	
 	.catering-form {

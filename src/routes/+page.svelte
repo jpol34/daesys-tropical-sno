@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Hero from '$lib/components/Hero.svelte';
+	import PricingSection from '$lib/components/PricingSection.svelte';
 	import FlavorList from '$lib/components/FlavorList.svelte';
 	import ConcoctionList from '$lib/components/ConcoctionList.svelte';
 	import CateringForm from '$lib/components/CateringForm.svelte';
@@ -7,6 +8,7 @@
 	import StickyCallButton from '$lib/components/StickyCallButton.svelte';
 	import { inview } from '$lib/actions/inview';
 	import ShareButtons from '$lib/components/ShareButtons.svelte';
+	import SpecialsSection from '$lib/components/SpecialsSection.svelte';
 </script>
 
 <main id="main-content">
@@ -22,12 +24,19 @@
 			
 			<ShareButtons />
 			
+			<PricingSection />
+			
 			<div class="menu-grid">
 				<FlavorList />
 				<ConcoctionList />
 			</div>
 		</div>
 	</section>
+	
+	<!-- Specials Section -->
+	<div class="fade-in-section" use:inview>
+		<SpecialsSection />
+	</div>
 	
 	<!-- Wave Divider -->
 	<div class="wave-divider yellow" aria-hidden="true"></div>

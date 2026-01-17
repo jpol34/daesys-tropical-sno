@@ -1,14 +1,26 @@
 <script lang="ts">
-	import { concoctions } from '$lib/data/concoctions';
+	import { supabase } from '$lib/supabase';
 	import { onMount } from 'svelte';
 	
+	type Concoction = {
+		name: string;
+		ingredients: string[];
+	};
+	
+	let concoctions = $state<Concoction[]>([]);
 	let isLoading = $state(true);
 	
-	onMount(() => {
-		// Brief delay for perceived loading (skeleton flash)
-		setTimeout(() => {
-			isLoading = false;
-		}, 400);
+	onMount(async () => {
+		const { data, error } = await supabase
+			.from('concoctions')
+			.select('name, ingredients')
+			.eq('active', true)
+			.order('sort_order', { ascending: true });
+		
+		if (data && !error) {
+			concoctions = data;
+		}
+		isLoading = false;
 	});
 </script>
 
@@ -16,8 +28,9 @@
 	<h3 class="concoction-title">
 		<span class="concoction-icon" aria-hidden="true">🌺</span>
 		Popular Concoctions
+		<span class="secret-badge" title="Secret menu available!">+</span>
 	</h3>
-	<p class="concoction-subtitle">Our signature flavor combinations — or create your own!</p>
+	<p class="concoction-subtitle">Our signature combinations — plus a secret menu made by our customers!</p>
 	
 	{#if isLoading}
 		<div class="concoction-grid" aria-hidden="true">
@@ -59,6 +72,27 @@
 	
 	.concoction-icon {
 		font-size: 1.2em;
+	}
+	
+	.secret-badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 1.5em;
+		height: 1.5em;
+		background: var(--color-yellow);
+		color: var(--color-gray-900);
+		font-family: var(--font-body);
+		font-weight: 800;
+		font-size: 0.6em;
+		border-radius: var(--radius-full);
+		margin-left: var(--space-xs);
+		cursor: help;
+		transition: transform var(--transition-fast);
+	}
+	
+	.secret-badge:hover {
+		transform: scale(1.1);
 	}
 	
 	

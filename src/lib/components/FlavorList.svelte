@@ -1,14 +1,21 @@
 <script lang="ts">
-	import { flavors } from '$lib/data/flavors';
+	import { supabase } from '$lib/supabase';
 	import { onMount } from 'svelte';
 	
+	let flavors = $state<string[]>([]);
 	let isLoading = $state(true);
 	
-	onMount(() => {
-		// Brief delay for perceived loading (skeleton flash)
-		setTimeout(() => {
-			isLoading = false;
-		}, 300);
+	onMount(async () => {
+		const { data, error } = await supabase
+			.from('flavors')
+			.select('name')
+			.eq('active', true)
+			.order('sort_order', { ascending: true });
+		
+		if (data && !error) {
+			flavors = data.map(f => f.name);
+		}
+		isLoading = false;
 	});
 </script>
 
