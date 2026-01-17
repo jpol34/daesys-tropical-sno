@@ -50,8 +50,7 @@
 		<section>
 			<h2>How We Protect Your Information</h2>
 			<p>
-				Your data is stored securely using industry-standard encryption and security practices. 
-				We use Supabase for our database, which provides enterprise-grade security.
+				Your data is stored securely using industry-standard encryption and security practices.
 			</p>
 		</section>
 
