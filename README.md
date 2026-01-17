@@ -25,7 +25,8 @@ A vibrant, mobile-first website for Daesy's Tropical Sno - a sno cone hut in Arl
 - **Backend**: Supabase (PostgreSQL, Auth, Edge Functions)
 - **Hosting**: Vercel
 - **Email**: Resend API
-- **Testing**: Vitest
+- **Testing**: Vitest, Playwright, Testing Library
+- **CI/CD**: GitHub Actions
 
 ## Getting Started
 
@@ -66,15 +67,39 @@ PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ## Scripts
 
 ```bash
-npm run dev        # Start development server
-npm run build      # Build for production
-npm run preview    # Preview production build
-npm run check      # Type-check the project
-npm run test       # Run tests in watch mode
-npm run test:run   # Run tests once
-npm run lint       # Run ESLint
-npm run format     # Format code with Prettier
+npm run dev           # Start development server
+npm run build         # Build for production
+npm run preview       # Preview production build
+npm run check         # Type-check the project
+npm run lint          # Run ESLint
+npm run format        # Format code with Prettier
+
+# Testing
+npm run test          # Run unit tests in watch mode
+npm run test:run      # Run unit tests once
+npm run test:coverage # Run tests with coverage report
+npm run test:e2e      # Run Playwright E2E tests
+npm run test:e2e:ui   # Run E2E tests with interactive UI
+npm run test:ci       # Run full test suite (unit + E2E)
 ```
+
+## Testing
+
+The project includes a comprehensive testing setup:
+
+- **Unit Tests**: Service utilities and business logic (Vitest)
+- **Component Tests**: Svelte components with Testing Library
+- **E2E Tests**: Critical user flows with Playwright
+
+```bash
+# Quick test run
+npm run test:run
+
+# Full suite with coverage
+npm run test:ci
+```
+
+Tests run automatically on every push via GitHub Actions. Failed tests block deployment.
 
 ## Deployment
 
@@ -114,6 +139,14 @@ src/
 │   ├── types/                 # TypeScript type definitions
 │   └── supabase.ts            # Supabase client
 └── app.css                    # Global styles
+
+tests/
+├── setup.ts                   # Test setup (jest-dom matchers)
+├── unit/
+│   ├── services/              # Service utility tests
+│   └── components/            # Component render tests
+└── e2e/
+    └── public-site.spec.ts    # End-to-end user flow tests
 
 supabase/
 ├── functions/                 # Edge functions
