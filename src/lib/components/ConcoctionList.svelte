@@ -28,7 +28,6 @@
 	<h3 class="concoction-title">
 		<span class="concoction-icon" aria-hidden="true">🌺</span>
 		Popular Concoctions
-		<span class="secret-badge" title="Secret menu available!">+</span>
 	</h3>
 	<p class="concoction-subtitle">Our signature combinations — plus a secret menu made by our customers!</p>
 	
