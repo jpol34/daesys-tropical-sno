@@ -1,22 +1,11 @@
 <script lang="ts">
-	import { supabase } from '$lib/supabase';
-	import { onMount } from 'svelte';
-	
-	let flavors = $state<string[]>([]);
-	let isLoading = $state(true);
-	
-	onMount(async () => {
-		const { data, error } = await supabase
-			.from('flavors')
-			.select('name')
-			.eq('active', true)
-			.order('sort_order', { ascending: true });
-		
-		if (data && !error) {
-			flavors = data.map(f => f.name);
-		}
-		isLoading = false;
-	});
+	import type { Flavor } from '$lib/types';
+
+	// Receive flavors as a prop from the page load function
+	let { flavors }: { flavors: Flavor[] } = $props();
+
+	// Extract just the names for display
+	const flavorNames = $derived(flavors.map((f) => f.name));
 </script>
 
 <div class="flavor-section">
@@ -24,20 +13,12 @@
 		<span class="flavor-icon" aria-hidden="true">🍧</span>
 		Take Your Pick
 	</h3>
-	
-	{#if isLoading}
-		<div class="flavor-grid skeleton-grid" aria-hidden="true">
-		{#each Array(20) as _, i (i)}
-			<div class="skeleton skeleton-item"></div>
-		{/each}
-		</div>
-	{:else}
-		<ul class="flavor-grid" role="list">
-		{#each flavors as flavor, i (flavor)}
+
+	<ul class="flavor-grid" role="list">
+		{#each flavorNames as flavor, i (flavor)}
 			<li class="flavor-item item-reveal" style="animation-delay: {i * 15}ms">{flavor}</li>
 		{/each}
-		</ul>
-	{/if}
+	</ul>
 </div>
 
 <style>
@@ -47,7 +28,7 @@
 		padding: var(--space-lg);
 		box-shadow: var(--shadow-md);
 	}
-	
+
 	.flavor-title {
 		display: flex;
 		align-items: center;
@@ -59,13 +40,11 @@
 		margin-bottom: var(--space-sm);
 		text-align: center;
 	}
-	
+
 	.flavor-icon {
 		font-size: 1.2em;
 	}
-	
-	
-	
+
 	.flavor-grid {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
@@ -74,7 +53,7 @@
 		padding: 0;
 		margin: 0;
 	}
-	
+
 	.flavor-item {
 		padding: var(--space-xs) 0;
 		color: var(--color-gray-800);
@@ -83,7 +62,7 @@
 		position: relative;
 		padding-left: 1em;
 	}
-	
+
 	.flavor-item::before {
 		content: '•';
 		position: absolute;
@@ -91,31 +70,26 @@
 		color: var(--color-red);
 		font-weight: bold;
 	}
-	
+
 	@media (min-width: 480px) {
 		.flavor-grid {
 			grid-template-columns: repeat(3, 1fr);
 		}
 	}
-	
+
 	@media (min-width: 768px) {
 		.flavor-section {
 			padding: var(--space-xl);
 		}
-		
+
 		.flavor-grid {
 			grid-template-columns: repeat(4, 1fr);
 		}
 	}
-	
+
 	@media (min-width: 1024px) {
 		.flavor-grid {
 			grid-template-columns: repeat(5, 1fr);
 		}
-	}
-	
-	/* Skeleton styles */
-	.skeleton-grid {
-		list-style: none;
 	}
 </style>

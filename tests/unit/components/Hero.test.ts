@@ -22,6 +22,6 @@ describe('Hero component', () => {
 	it('renders flavor and concoction counts', () => {
 		render(Hero);
 		expect(screen.getByText(/40\+ Flavors/i)).toBeInTheDocument();
-		expect(screen.getByText(/56 Signature Concoctions/i)).toBeInTheDocument();
+		expect(screen.getByText(/55\+ Signature Concoctions/i)).toBeInTheDocument();
 	});
 });

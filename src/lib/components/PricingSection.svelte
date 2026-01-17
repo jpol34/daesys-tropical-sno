@@ -6,7 +6,7 @@
 		{ name: 'Medium', price: 4 },
 		{ name: 'Large', price: 5 }
 	];
-	
+
 	const candyToppings = [
 		'Gummy Sharks',
 		'Gummy Worms',
@@ -19,7 +19,7 @@
 		'Chamoy',
 		'Tajín'
 	];
-	
+
 	const creamToppings = ['Vanilla', 'Coconut'];
 </script>
 
@@ -40,7 +40,7 @@
 		</div>
 		<p class="pricing-note">No tax — flat rate pricing!</p>
 	</div>
-	
+
 	<!-- Toppings -->
 	<div class="pricing-card toppings-card">
 		<h3 class="pricing-title">
@@ -48,7 +48,7 @@
 			Top It Off
 			<span class="topping-price">50¢ each</span>
 		</h3>
-		
+
 		<div class="toppings-group">
 			<h4 class="toppings-category">Candy</h4>
 			<ul class="toppings-list">
@@ -57,7 +57,7 @@
 				{/each}
 			</ul>
 		</div>
-		
+
 		<div class="toppings-group">
 			<h4 class="toppings-category">Cream</h4>
 			<ul class="toppings-list cream-list">
@@ -67,7 +67,7 @@
 			</ul>
 		</div>
 	</div>
-	
+
 	<!-- Sugar-free note -->
 	<div class="sugar-free-banner">
 		<span>Sugar-free options available!</span>
@@ -80,7 +80,7 @@
 		gap: var(--space-lg);
 		margin-bottom: var(--space-xl);
 	}
-	
+
 	.pricing-card {
 		background: var(--color-white);
 		border-radius: var(--radius-xl);
@@ -88,15 +88,15 @@
 		box-shadow: var(--shadow-md);
 		border: 3px solid transparent;
 	}
-	
+
 	.sizes-card {
 		border-color: var(--color-blue);
 	}
-	
+
 	.toppings-card {
 		border-color: var(--color-red-light);
 	}
-	
+
 	.pricing-title {
 		display: flex;
 		align-items: center;
@@ -109,11 +109,11 @@
 		text-align: center;
 		flex-wrap: wrap;
 	}
-	
+
 	.pricing-icon {
 		font-size: 1.3em;
 	}
-	
+
 	.topping-price {
 		display: inline-block;
 		background: var(--color-red);
@@ -125,7 +125,7 @@
 		border-radius: var(--radius-full);
 		margin-left: var(--space-xs);
 	}
-	
+
 	/* Sizes Grid */
 	.sizes-grid {
 		display: grid;
@@ -133,7 +133,7 @@
 		gap: var(--space-sm);
 		margin-bottom: var(--space-md);
 	}
-	
+
 	.size-item {
 		display: flex;
 		flex-direction: column;
@@ -143,23 +143,23 @@
 		border-radius: var(--radius-md);
 		transition: transform var(--transition-fast);
 	}
-	
+
 	.size-item:hover {
 		transform: scale(1.05);
 	}
-	
+
 	.size-name {
 		font-weight: 600;
 		color: var(--color-gray-800);
 		font-size: 0.85rem;
 	}
-	
+
 	.size-price {
 		font-family: var(--font-heading);
 		font-size: 1.5rem;
 		color: var(--color-blue);
 	}
-	
+
 	.pricing-note {
 		text-align: center;
 		color: var(--color-gray-600);
@@ -167,16 +167,16 @@
 		margin: 0;
 		font-style: italic;
 	}
-	
+
 	/* Toppings */
 	.toppings-group {
 		margin-bottom: var(--space-md);
 	}
-	
+
 	.toppings-group:last-child {
 		margin-bottom: 0;
 	}
-	
+
 	.toppings-category {
 		font-family: var(--font-body);
 		font-size: 0.85rem;
@@ -188,7 +188,7 @@
 		padding-bottom: var(--space-xs);
 		border-bottom: 2px dashed var(--color-gray-200);
 	}
-	
+
 	.toppings-list {
 		display: flex;
 		flex-wrap: wrap;
@@ -197,14 +197,14 @@
 		padding: 0;
 		margin: 0;
 	}
-	
+
 	.toppings-list li {
 		font-size: 0.9rem;
 		color: var(--color-gray-800);
 		padding-left: 1.2em;
 		position: relative;
 	}
-	
+
 	.toppings-list li::before {
 		content: '•';
 		position: absolute;
@@ -212,7 +212,7 @@
 		color: var(--color-yellow);
 		font-weight: bold;
 	}
-	
+
 	/* Sugar-free banner */
 	.sugar-free-banner {
 		display: flex;
@@ -227,35 +227,31 @@
 		font-size: 1rem;
 		box-shadow: var(--shadow-md);
 	}
-	
-	.sugar-free-icon {
-		font-size: 1.3em;
-	}
-	
+
 	/* Responsive */
 	@media (min-width: 640px) {
 		.pricing-section {
 			grid-template-columns: 1fr 1fr;
 		}
-		
+
 		.sugar-free-banner {
 			grid-column: 1 / -1;
 		}
 	}
-	
+
 	@media (min-width: 768px) {
 		.pricing-card {
 			padding: var(--space-xl);
 		}
-		
+
 		.sizes-grid {
 			gap: var(--space-md);
 		}
-		
+
 		.size-name {
 			font-size: 0.95rem;
 		}
-		
+
 		.size-price {
 			font-size: 1.75rem;
 		}

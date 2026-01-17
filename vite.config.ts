@@ -13,14 +13,19 @@ export default defineConfig({
 		setupFiles: ['./tests/setup.ts'],
 		coverage: {
 			provider: 'v8',
-			reporter: ['text', 'html', 'lcov'],
-			include: ['src/lib/services/**', 'src/lib/data/**'],
-			exclude: ['**/*.test.ts', '**/*.spec.ts'],
+			reporter: ['text', 'html', 'lcov', 'json'],
+			include: [
+				'src/lib/services/**/*.ts',
+				'src/lib/data/**/*.ts',
+				'src/lib/utils/**/*.ts',
+				'src/lib/actions/**/*.ts'
+			],
+			exclude: ['**/*.test.ts', '**/*.spec.ts', '**/*.d.ts', '**/index.ts'],
 			thresholds: {
-				lines: 20,
-				functions: 20,
-				branches: 15,
-				statements: 20
+				lines: 80,
+				functions: 80,
+				branches: 70,
+				statements: 80
 			}
 		}
 	}

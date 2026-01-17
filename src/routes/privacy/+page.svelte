@@ -1,11 +1,15 @@
-<script>
+<script lang="ts">
 	import { businessInfo } from '$lib/data/businessInfo';
+	import { siteConfig, getCanonicalUrl } from '$lib/config/site';
 </script>
 
 <svelte:head>
-	<title>Privacy Policy | Daesy's Tropical Sno</title>
-	<meta name="description" content="Privacy Policy for Daesy's Tropical Sno - Learn how we collect and protect your information." />
-	<link rel="canonical" href="https://daesyssno.com/privacy" />
+	<title>Privacy Policy | {siteConfig.name}</title>
+	<meta
+		name="description"
+		content="Privacy Policy for {siteConfig.name} - Learn how we collect and protect your information."
+	/>
+	<link rel="canonical" href={getCanonicalUrl('/privacy')} />
 </svelte:head>
 
 <main class="privacy-page">
@@ -17,8 +21,8 @@
 		<section>
 			<h2>Who We Are</h2>
 			<p>
-				Daesy's Tropical Sno is a mobile sno cone business based in Arlington, Texas. 
-				This policy explains how we collect and use your information.
+				Daesy's Tropical Sno is a mobile sno cone business based in Arlington, Texas. This policy
+				explains how we collect and use your information.
 			</p>
 		</section>
 
@@ -26,8 +30,13 @@
 			<h2>What We Collect</h2>
 			<p>We collect the following information when you provide it to us:</p>
 			<ul>
-				<li><strong>Sno Squad (Loyalty Program):</strong> Name, phone number, and optionally email address</li>
-				<li><strong>Event Booking Requests:</strong> Name, phone number, email, event date, location, and event details</li>
+				<li>
+					<strong>Sno Squad (Loyalty Program):</strong> Name, phone number, and optionally email address
+				</li>
+				<li>
+					<strong>Event Booking Requests:</strong> Name, phone number, email, event date, location, and
+					event details
+				</li>
 			</ul>
 		</section>
 
@@ -51,9 +60,7 @@
 
 		<section>
 			<h2>How We Protect Your Information</h2>
-			<p>
-				Your data is stored securely using industry-standard encryption and security practices.
-			</p>
+			<p>Your data is stored securely using industry-standard encryption and security practices.</p>
 		</section>
 
 		<section>
@@ -64,19 +71,15 @@
 				<li>Correct any incorrect information</li>
 				<li>Delete your information entirely</li>
 			</ul>
-			<p>
-				Just contact us and we'll take care of it — no hassle, no questions asked.
-			</p>
+			<p>Just contact us and we'll take care of it — no hassle, no questions asked.</p>
 		</section>
 
 		<section>
 			<h2>Contact Us</h2>
-			<p>
-				If you have any questions about this privacy policy or your data, reach out:
-			</p>
+			<p>If you have any questions about this privacy policy or your data, reach out:</p>
 			<ul class="contact-list">
 				<li>📧 <a href="mailto:{businessInfo.email}">{businessInfo.email}</a></li>
-				<li>📞 <a href="{businessInfo.phoneHref}">{businessInfo.phone}</a></li>
+				<li>📞 <a href={businessInfo.phoneHref}>{businessInfo.phone}</a></li>
 			</ul>
 		</section>
 	</div>
@@ -155,14 +158,14 @@
 		text-decoration: underline;
 	}
 
-.back-link {
+	.back-link {
 		display: inline-block;
 		color: var(--color-blue);
 		text-decoration: none;
 		font-weight: 500;
 		margin-bottom: var(--space-md);
 	}
-	
+
 	.back-link:hover {
 		text-decoration: underline;
 	}

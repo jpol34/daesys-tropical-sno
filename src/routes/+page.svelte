@@ -9,14 +9,17 @@
 	import { inview } from '$lib/actions/inview';
 	import ShareButtons from '$lib/components/ShareButtons.svelte';
 	import SpecialsSection from '$lib/components/SpecialsSection.svelte';
+
+	// Receive data from +page.ts load function
+	let { data } = $props();
 </script>
 
 <main id="main-content">
 	<Hero />
-	
+
 	<!-- Wave Divider -->
 	<div class="wave-divider yellow" aria-hidden="true"></div>
-	
+
 	<!-- Menu Section -->
 	<section id="menu" class="menu-section fade-in-section" aria-labelledby="menu-heading" use:inview>
 		<div class="container">
@@ -24,36 +27,36 @@
 			<p class="section-subtitle text-center">
 				From classic favorites to your own creations — find the perfect flavor!
 			</p>
-			
+
 			<ShareButtons />
-			
+
 			<PricingSection />
-			
+
 			<div class="menu-grid">
-				<FlavorList />
-				<ConcoctionList />
+				<FlavorList flavors={data.flavors} />
+				<ConcoctionList concoctions={data.concoctions} />
 			</div>
 		</div>
 	</section>
-	
+
 	<!-- Wave Divider -->
 	<div class="wave-divider yellow" aria-hidden="true"></div>
-	
+
 	<!-- Specials Section -->
 	<div class="fade-in-section" use:inview>
 		<SpecialsSection />
 	</div>
-	
+
 	<!-- Wave Divider -->
 	<div class="wave-divider yellow" aria-hidden="true"></div>
-	
+
 	<div class="fade-in-section" use:inview>
 		<CateringForm />
 	</div>
-	
+
 	<!-- Wave Divider -->
 	<div class="wave-divider inverted" aria-hidden="true"></div>
-	
+
 	<div class="fade-in-section" use:inview>
 		<ContactSection />
 	</div>
@@ -66,38 +69,38 @@
 		background: var(--color-cream);
 		padding: var(--space-2xl) 0;
 	}
-	
+
 	.section-title {
 		margin-bottom: var(--space-sm);
 	}
-	
+
 	.section-subtitle {
 		color: var(--color-gray-600);
 		max-width: 500px;
 		margin: 0 auto var(--space-xl);
 	}
-	
+
 	.text-center {
 		text-align: center;
 	}
-	
+
 	.menu-grid {
 		display: grid;
 		gap: var(--space-xl);
 	}
-	
+
 	@media (min-width: 1024px) {
 		.menu-grid {
 			grid-template-columns: 1fr 1fr;
 			align-items: start;
 		}
 	}
-	
+
 	/* Add padding to account for sticky CTA on mobile */
 	main {
 		padding-bottom: 70px;
 	}
-	
+
 	@media (min-width: 768px) {
 		main {
 			padding-bottom: 0;

@@ -15,7 +15,10 @@ export type CateringRequest = {
 	created_at: string;
 };
 
-export type CateringRequestInsert = Omit<CateringRequest, 'id' | 'admin_notes' | 'status' | 'created_at'>;
+export type CateringRequestInsert = Omit<
+	CateringRequest,
+	'id' | 'admin_notes' | 'status' | 'created_at'
+>;
 
 export type Flavor = {
 	id: string;
@@ -70,3 +73,100 @@ export type LoyaltyAction = LoyaltyHistory['action'];
 export type AdminTab = 'loyalty' | 'requests' | 'flavors' | 'concoctions' | 'specials';
 
 export type LoyaltyView = 'lookup' | 'stats' | 'members';
+
+// ============ SERVICE TYPES ============
+
+/**
+ * Generic API response wrapper
+ */
+export type ApiResponse<T> =
+	| {
+			data: T;
+			error: null;
+	  }
+	| {
+			data: null;
+			error: {
+				message: string;
+				code: string;
+			};
+	  };
+
+/**
+ * Pagination parameters
+ */
+export type PaginationParams = {
+	page?: number;
+	limit?: number;
+	offset?: number;
+};
+
+/**
+ * Paginated response
+ */
+export type PaginatedResponse<T> = {
+	items: T[];
+	total: number;
+	page: number;
+	pageSize: number;
+	hasMore: boolean;
+};
+
+// ============ FORM TYPES ============
+
+/**
+ * Form field validation state
+ */
+export type FieldValidation = {
+	error: string | null;
+	touched: boolean;
+	valid: boolean;
+};
+
+/**
+ * Generic form state
+ */
+export type FormState<T extends Record<string, unknown>> = {
+	values: T;
+	errors: Partial<Record<keyof T, string>>;
+	touched: Partial<Record<keyof T, boolean>>;
+	isSubmitting: boolean;
+	isValid: boolean;
+};
+
+/**
+ * Catering form values
+ */
+export type CateringFormValues = {
+	name: string;
+	phone: string;
+	email: string;
+	eventDate: string;
+	eventTime: string;
+	eventType: string;
+	notes: string;
+};
+
+// ============ COMPONENT TYPES ============
+
+/**
+ * Common button variants
+ */
+export type ButtonVariant = 'primary' | 'secondary' | 'cta' | 'ghost';
+
+/**
+ * Common size variants
+ */
+export type Size = 'sm' | 'md' | 'lg';
+
+/**
+ * Toast/notification types
+ */
+export type ToastType = 'success' | 'error' | 'warning' | 'info';
+
+export type Toast = {
+	id: string;
+	type: ToastType;
+	message: string;
+	duration?: number;
+};

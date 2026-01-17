@@ -1,22 +1,21 @@
 import type { RequestHandler } from './$types';
-
-const SITE_URL = 'https://daesyssno.com';
+import { siteConfig } from '$lib/config/site';
 
 export const GET: RequestHandler = async () => {
+	// Use fixed lastmod dates to accurately reflect when content was last updated
+	// Update these dates when you make significant changes to each page
 	const pages = [
-		{ url: '/', priority: '1.0', changefreq: 'weekly' },
-		{ url: '/privacy', priority: '0.3', changefreq: 'yearly' }
+		{ url: '/', priority: '1.0', changefreq: 'weekly', lastmod: '2026-01-17' },
+		{ url: '/privacy', priority: '0.3', changefreq: 'yearly', lastmod: '2026-01-17' }
 	];
-
-	const today = new Date().toISOString().split('T')[0];
 
 	const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${pages
 	.map(
 		(page) => `  <url>
-    <loc>${SITE_URL}${page.url}</loc>
-    <lastmod>${today}</lastmod>
+    <loc>${siteConfig.url}${page.url}</loc>
+    <lastmod>${page.lastmod}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
   </url>`

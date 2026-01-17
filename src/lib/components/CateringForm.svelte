@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { eventTypes } from '$lib/data/eventTypes';
 	import { supabase } from '$lib/supabase';
-	
+	import { checkRateLimit, resetRateLimit } from '$lib/utils/rateLimit';
+
 	// Form state
 	let name = $state('');
 	let phone = $state('');
@@ -11,35 +12,35 @@
 	let eventType = $state('');
 	let notes = $state('');
 	let honeypot = $state(''); // Spam protection - hidden field
-	
+
 	// UI state
 	let isSubmitting = $state(false);
 	let isSubmitted = $state(false);
 	let submitError = $state('');
-	
+
 	// Validation state
 	let errors = $state<Record<string, string>>({});
 	let touched = $state<Record<string, boolean>>({});
-	
+
 	// Validation functions
 	function validateEmail(value: string): string {
 		if (!value) return 'Email is required';
 		if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Please enter a valid email';
 		return '';
 	}
-	
+
 	function validatePhone(value: string): string {
 		if (!value) return 'Phone number is required';
 		const digits = value.replace(/\D/g, '');
 		if (digits.length < 10) return 'Please enter a valid phone number';
 		return '';
 	}
-	
+
 	function validateRequired(value: string, fieldName: string): string {
 		if (!value.trim()) return `${fieldName} is required`;
 		return '';
 	}
-	
+
 	function validateDate(value: string): string {
 		if (!value) return 'Event date is required';
 		const selected = new Date(value);
@@ -48,7 +49,7 @@
 		if (selected < today) return 'Please select a future date';
 		return '';
 	}
-	
+
 	// Validate all fields
 	function validateForm(): boolean {
 		errors = {
@@ -59,15 +60,15 @@
 			eventTime: validateRequired(eventTime, 'Event time'),
 			eventType: validateRequired(eventType, 'Event type')
 		};
-		
-		return !Object.values(errors).some(e => e);
+
+		return !Object.values(errors).some((e) => e);
 	}
-	
+
 	// Handle field blur for inline validation
 	function handleBlur(field: string) {
 		touched[field] = true;
-		
-		switch(field) {
+
+		switch (field) {
 			case 'name':
 				errors.name = validateRequired(name, 'Name');
 				break;
@@ -88,7 +89,7 @@
 				break;
 		}
 	}
-	
+
 	// Format phone number as user types
 	function formatPhone(value: string): string {
 		const digits = value.replace(/\D/g, '');
@@ -96,23 +97,34 @@
 		if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
 		return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
 	}
-	
+
 	function handlePhoneInput(e: Event) {
 		const target = e.target as HTMLInputElement;
 		phone = formatPhone(target.value);
 	}
-	
+
 	// Submit handler
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
-		
+
 		// Honeypot check - if filled, it's a bot
 		if (honeypot) {
 			// Silently "succeed" but don't submit
 			isSubmitted = true;
 			return;
 		}
-		
+
+		// Rate limit check - prevent rapid repeated submissions
+		const rateLimitResult = checkRateLimit('catering-form', {
+			maxAttempts: 3,
+			windowMs: 60_000, // 1 minute window
+			blockDurationMs: 300_000 // 5 minute block
+		});
+		if (!rateLimitResult.allowed) {
+			submitError = rateLimitResult.message;
+			return;
+		}
+
 		if (!validateForm()) {
 			// Mark all fields as touched to show errors
 			touched = {
@@ -125,27 +137,27 @@
 			};
 			return;
 		}
-		
+
 		isSubmitting = true;
 		submitError = '';
-		
+
 		try {
 			// Combine date and time
 			const eventDateTime = new Date(`${eventDate}T${eventTime}`);
-			
-			const { error } = await supabase
-				.from('catering_requests')
-				.insert({
-					name: name.trim(),
-					phone: phone.trim(),
-					email: email.trim().toLowerCase(),
-					event_date: eventDateTime.toISOString(),
-					event_type: eventType,
-					customer_notes: notes.trim() || null
-				});
-			
+
+			const { error } = await supabase.from('catering_requests').insert({
+				name: name.trim(),
+				phone: phone.trim(),
+				email: email.trim().toLowerCase(),
+				event_date: eventDateTime.toISOString(),
+				event_type: eventType,
+				customer_notes: notes.trim() || null
+			});
+
 			if (error) throw error;
-			
+
+			// Reset rate limit on successful submission
+			resetRateLimit('catering-form');
 			isSubmitted = true;
 		} catch (err) {
 			console.error('Submission error:', err);
@@ -154,7 +166,7 @@
 			isSubmitting = false;
 		}
 	}
-	
+
 	// Get minimum date (today)
 	const today = new Date().toISOString().split('T')[0];
 </script>
@@ -164,34 +176,45 @@
 		<div class="catering-header">
 			<h2 id="catering-heading" class="section-title">Your Event, But Cooler</h2>
 			<p class="catering-subtitle">
-				Birthday parties, weddings, corporate events and more! Fill out the form below and we'll get back to you within 24 hours.
+				Birthday parties, weddings, corporate events and more! Fill out the form below and we'll get
+				back to you within 24 hours.
 			</p>
-			
+
 			<div class="catering-pricing">
 				<div class="pricing-highlight">
 					<span class="highlight-icon vw-van" aria-hidden="true">
 						<svg viewBox="0 0 64 44" width="32" height="22">
 							<!-- Main body with curves -->
-							<path d="M8 36 L8 16 Q8 8 16 8 L56 8 Q62 8 62 16 L62 36 Q62 38 60 38 L10 38 Q8 38 8 36 Z" fill="#1565C0"/>
+							<path
+								d="M8 36 L8 16 Q8 8 16 8 L56 8 Q62 8 62 16 L62 36 Q62 38 60 38 L10 38 Q8 38 8 36 Z"
+								fill="#1565C0"
+							/>
 							<!-- Curved roof -->
-							<path d="M12 16 Q12 10 20 10 L52 10 Q58 10 58 16" fill="#1565C0"/>
+							<path d="M12 16 Q12 10 20 10 L52 10 Q58 10 58 16" fill="#1565C0" />
 							<!-- Big curved windshield -->
-							<path d="M10 18 Q10 12 18 12 L26 12 Q28 12 28 14 L28 26 Q28 28 26 28 L12 28 Q10 28 10 26 Z" fill="#B3E5FC"/>
+							<path
+								d="M10 18 Q10 12 18 12 L26 12 Q28 12 28 14 L28 26 Q28 28 26 28 L12 28 Q10 28 10 26 Z"
+								fill="#B3E5FC"
+							/>
 							<!-- Side windows with rounded corners -->
-							<rect x="32" y="14" width="11" height="12" rx="3" fill="#B3E5FC"/>
-							<rect x="46" y="14" width="11" height="12" rx="3" fill="#B3E5FC"/>
+							<rect x="32" y="14" width="11" height="12" rx="3" fill="#B3E5FC" />
+							<rect x="46" y="14" width="11" height="12" rx="3" fill="#B3E5FC" />
 							<!-- Yellow racing stripe -->
-							<path d="M8 28 L62 28 L62 32 L8 32 Z" fill="#FFD600"/>
+							<path d="M8 28 L62 28 L62 32 L8 32 Z" fill="#FFD600" />
 							<!-- VW emblem area -->
-							<ellipse cx="19" cy="20" rx="5" ry="5" fill="rgba(255,255,255,0.9)"/>
+							<ellipse cx="19" cy="20" rx="5" ry="5" fill="rgba(255,255,255,0.9)" />
 							<!-- Wheels with hubcaps -->
-							<circle cx="18" cy="38" r="5" fill="#424242"/>
-							<circle cx="18" cy="38" r="2.5" fill="#9E9E9E"/>
-							<circle cx="50" cy="38" r="5" fill="#424242"/>
-							<circle cx="50" cy="38" r="2.5" fill="#9E9E9E"/>
+							<circle cx="18" cy="38" r="5" fill="#424242" />
+							<circle cx="18" cy="38" r="2.5" fill="#9E9E9E" />
+							<circle cx="50" cy="38" r="5" fill="#424242" />
+							<circle cx="50" cy="38" r="2.5" fill="#9E9E9E" />
 							<!-- Rounded bumper -->
-							<path d="M6 34 Q4 34 4 36 L4 38 Q4 40 6 40 L12 40" fill="#CFD8DC" stroke="none"/>
-							<path d="M58 34 Q60 34 62 36 L62 38 Q62 40 60 40 L54 40" fill="#CFD8DC" stroke="none"/>
+							<path d="M6 34 Q4 34 4 36 L4 38 Q4 40 6 40 L12 40" fill="#CFD8DC" stroke="none" />
+							<path
+								d="M58 34 Q60 34 62 36 L62 38 Q62 40 60 40 L54 40"
+								fill="#CFD8DC"
+								stroke="none"
+							/>
 						</svg>
 					</span>
 					<span><strong>No travel fees</strong> — we come to you!</span>
@@ -202,14 +225,17 @@
 				</div>
 			</div>
 		</div>
-		
+
 		{#if isSubmitted}
 			<div class="success-message" role="alert">
 				<div class="success-icon" aria-hidden="true">🎉</div>
 				<h3>Request Submitted!</h3>
-				<p>Thank you for your interest! We'll review your request and get back to you within 24 hours.</p>
-				<button 
-					type="button" 
+				<p>
+					Thank you for your interest! We'll review your request and get back to you within 24
+					hours.
+				</p>
+				<button
+					type="button"
 					class="btn btn-secondary"
 					onclick={() => {
 						isSubmitted = false;
@@ -228,24 +254,20 @@
 				</button>
 			</div>
 		{:else}
-			<form 
-				class="catering-form"
-				onsubmit={handleSubmit}
-				novalidate
-			>
+			<form class="catering-form" onsubmit={handleSubmit} novalidate>
 				<!-- Honeypot field - hidden from humans, bots fill it -->
 				<div class="honeypot" aria-hidden="true">
 					<label for="website">Website</label>
-					<input 
-						type="text" 
-						id="website" 
+					<input
+						type="text"
+						id="website"
 						name="website"
 						bind:value={honeypot}
 						tabindex="-1"
 						autocomplete="off"
 					/>
 				</div>
-				
+
 				<div class="form-row">
 					<div class="form-group">
 						<label for="name" class="form-label">
@@ -267,11 +289,12 @@
 						/>
 						{#if touched.name && errors.name}
 							<p id="name-error" class="form-error" role="alert">
-								<span aria-hidden="true">⚠️</span> {errors.name}
+								<span aria-hidden="true">⚠️</span>
+								{errors.name}
 							</p>
 						{/if}
 					</div>
-					
+
 					<div class="form-group">
 						<label for="phone" class="form-label">
 							Phone Number <span class="required" aria-hidden="true">*</span>
@@ -294,12 +317,13 @@
 						/>
 						{#if touched.phone && errors.phone}
 							<p id="phone-error" class="form-error" role="alert">
-								<span aria-hidden="true">⚠️</span> {errors.phone}
+								<span aria-hidden="true">⚠️</span>
+								{errors.phone}
 							</p>
 						{/if}
 					</div>
 				</div>
-				
+
 				<div class="form-group">
 					<label for="email" class="form-label">
 						Email Address <span class="required" aria-hidden="true">*</span>
@@ -321,11 +345,12 @@
 					/>
 					{#if touched.email && errors.email}
 						<p id="email-error" class="form-error" role="alert">
-							<span aria-hidden="true">⚠️</span> {errors.email}
+							<span aria-hidden="true">⚠️</span>
+							{errors.email}
 						</p>
 					{/if}
 				</div>
-				
+
 				<div class="form-row">
 					<div class="form-group">
 						<label for="event-date" class="form-label">
@@ -347,11 +372,12 @@
 						/>
 						{#if touched.eventDate && errors.eventDate}
 							<p id="date-error" class="form-error" role="alert">
-								<span aria-hidden="true">⚠️</span> {errors.eventDate}
+								<span aria-hidden="true">⚠️</span>
+								{errors.eventDate}
 							</p>
 						{/if}
 					</div>
-					
+
 					<div class="form-group">
 						<label for="event-time" class="form-label">
 							Event Time <span class="required" aria-hidden="true">*</span>
@@ -371,12 +397,13 @@
 						/>
 						{#if touched.eventTime && errors.eventTime}
 							<p id="time-error" class="form-error" role="alert">
-								<span aria-hidden="true">⚠️</span> {errors.eventTime}
+								<span aria-hidden="true">⚠️</span>
+								{errors.eventTime}
 							</p>
 						{/if}
 					</div>
 				</div>
-				
+
 				<div class="form-group">
 					<label for="event-type" class="form-label">
 						Event Type <span class="required" aria-hidden="true">*</span>
@@ -394,17 +421,18 @@
 						aria-describedby={errors.eventType ? 'type-error' : undefined}
 					>
 						<option value="">Select event type...</option>
-					{#each eventTypes as type (type)}
-						<option value={type}>{type}</option>
-					{/each}
+						{#each eventTypes as type (type)}
+							<option value={type}>{type}</option>
+						{/each}
 					</select>
 					{#if touched.eventType && errors.eventType}
 						<p id="type-error" class="form-error" role="alert">
-							<span aria-hidden="true">⚠️</span> {errors.eventType}
+							<span aria-hidden="true">⚠️</span>
+							{errors.eventType}
 						</p>
 					{/if}
 				</div>
-				
+
 				<div class="form-group">
 					<label for="notes" class="form-label">
 						Additional Details <span class="optional">(optional)</span>
@@ -418,18 +446,15 @@
 						rows="4"
 					></textarea>
 				</div>
-				
+
 				{#if submitError}
 					<div class="submit-error" role="alert">
-						<span aria-hidden="true">❌</span> {submitError}
+						<span aria-hidden="true">❌</span>
+						{submitError}
 					</div>
 				{/if}
-				
-				<button 
-					type="submit" 
-					class="btn btn-cta submit-btn"
-					disabled={isSubmitting}
-				>
+
+				<button type="submit" class="btn btn-cta submit-btn" disabled={isSubmitting}>
 					{#if isSubmitting}
 						<span class="spinner" aria-hidden="true"></span>
 						Submitting...
@@ -447,22 +472,22 @@
 		background: var(--color-white);
 		padding: var(--space-2xl) 0;
 	}
-	
+
 	.catering-header {
 		text-align: center;
 		margin-bottom: var(--space-xl);
 	}
-	
+
 	.section-title {
 		margin-bottom: var(--space-sm);
 	}
-	
+
 	.catering-subtitle {
 		color: var(--color-gray-600);
 		max-width: 600px;
 		margin: 0 auto;
 	}
-	
+
 	.catering-pricing {
 		display: flex;
 		flex-direction: column;
@@ -470,7 +495,7 @@
 		margin-top: var(--space-lg);
 		align-items: center;
 	}
-	
+
 	.pricing-highlight {
 		display: inline-flex;
 		align-items: center;
@@ -482,18 +507,18 @@
 		color: var(--color-gray-900);
 		box-shadow: var(--shadow-sm);
 	}
-	
+
 	.highlight-icon {
 		font-size: 1.2em;
 	}
-	
+
 	@media (min-width: 640px) {
 		.catering-pricing {
 			flex-direction: row;
 			justify-content: center;
 		}
 	}
-	
+
 	.catering-form {
 		max-width: 600px;
 		margin: 0 auto;
@@ -501,29 +526,29 @@
 		padding: var(--space-lg);
 		border-radius: var(--radius-xl);
 	}
-	
+
 	.form-row {
 		display: grid;
 		gap: var(--space-md);
 	}
-	
+
 	.required {
 		color: var(--color-red);
 	}
-	
+
 	.optional {
 		color: var(--color-gray-600);
 		font-weight: 400;
 		font-size: 0.9em;
 	}
-	
+
 	.submit-btn {
 		width: 100%;
 		padding: var(--space-md);
 		font-size: 1.1rem;
 		margin-top: var(--space-md);
 	}
-	
+
 	.submit-error {
 		background: #fef2f2;
 		border: 1px solid var(--color-red);
@@ -535,7 +560,7 @@
 		align-items: center;
 		gap: var(--space-sm);
 	}
-	
+
 	.success-message {
 		max-width: 500px;
 		margin: 0 auto;
@@ -545,33 +570,33 @@
 		border-radius: var(--radius-xl);
 		animation: fadeInUp 0.5s ease-out;
 	}
-	
+
 	.success-icon {
 		font-size: 3rem;
 		margin-bottom: var(--space-md);
 	}
-	
+
 	.success-message h3 {
 		font-family: var(--font-heading);
 		color: #166534;
 		margin-bottom: var(--space-sm);
 	}
-	
+
 	.success-message p {
 		color: #166534;
 		margin-bottom: var(--space-lg);
 	}
-	
+
 	@media (min-width: 640px) {
 		.form-row {
 			grid-template-columns: 1fr 1fr;
 		}
-		
+
 		.catering-form {
 			padding: var(--space-xl);
 		}
 	}
-	
+
 	@keyframes fadeInUp {
 		from {
 			opacity: 0;

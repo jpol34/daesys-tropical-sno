@@ -154,6 +154,12 @@ supabase/
 └── migrations/                # Database migrations
 ```
 
+## Documentation
+
+- [Contributing Guide](CONTRIBUTING.md) - How to contribute to this project
+- [Architecture Overview](docs/ARCHITECTURE.md) - Technical architecture documentation
+- [Refactoring Guide](docs/REFACTORING_GUIDE.md) - Best practices implementation guide
+
 ## Contact
 
 - **Business**: Daesy's Tropical Sno
@@ -162,3 +168,7 @@ supabase/
 - **Phone**: (817) 401-6310
 - **Email**: info@daesyssno.com
 - **Instagram**: [@daesystropicalsno](https://www.instagram.com/daesystropicalsno)
+
+## License
+
+Private - All rights reserved
