@@ -9,7 +9,7 @@
 
 <main class="privacy-page">
 	<div class="container">
-		<a href="/" class="back-link top">← Back to the Chill</a>
+		<a href="/" class="back-link">← Back to the Menu</a>
 		<h1>Privacy Policy</h1>
 		<p class="last-updated">Last updated: January 17, 2026</p>
 
@@ -78,8 +78,6 @@
 				<li>📞 <a href="{businessInfo.phoneHref}">{businessInfo.phone}</a></li>
 			</ul>
 		</section>
-
-		<a href="/" class="back-link">← Back to the Chill</a>
 	</div>
 </main>
 
@@ -161,14 +159,7 @@
 		color: var(--color-blue);
 		text-decoration: none;
 		font-weight: 500;
-	}
-	
-	.back-link.top {
 		margin-bottom: var(--space-md);
-	}
-	
-	.back-link:not(.top) {
-		margin-top: var(--space-lg);
 	}
 	
 	.back-link:hover {
