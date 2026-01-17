@@ -27,15 +27,15 @@
 	
 	{#if isLoading}
 		<div class="flavor-grid skeleton-grid" aria-hidden="true">
-			{#each Array(20) as _}
-				<div class="skeleton skeleton-item"></div>
-			{/each}
+		{#each Array(20) as _, i (i)}
+			<div class="skeleton skeleton-item"></div>
+		{/each}
 		</div>
 	{:else}
 		<ul class="flavor-grid" role="list">
-			{#each flavors as flavor, i}
-				<li class="flavor-item item-reveal" style="animation-delay: {i * 15}ms">{flavor}</li>
-			{/each}
+		{#each flavors as flavor, i (flavor)}
+			<li class="flavor-item item-reveal" style="animation-delay: {i * 15}ms">{flavor}</li>
+		{/each}
 		</ul>
 	{/if}
 </div>

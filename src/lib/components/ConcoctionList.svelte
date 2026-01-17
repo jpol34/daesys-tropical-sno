@@ -33,18 +33,18 @@
 	
 	{#if isLoading}
 		<div class="concoction-grid" aria-hidden="true">
-			{#each Array(12) as _}
-				<div class="skeleton skeleton-card"></div>
-			{/each}
+		{#each Array(12) as _, i (i)}
+			<div class="skeleton skeleton-card"></div>
+		{/each}
 		</div>
 	{:else}
 		<ul class="concoction-grid" role="list">
-			{#each concoctions as concoction, i}
-				<li class="concoction-card item-reveal" style="animation-delay: {i * 20}ms">
-					<span class="concoction-name">{concoction.name}</span>
-					<span class="concoction-ingredients">{concoction.ingredients.join(' + ')}</span>
-				</li>
-			{/each}
+		{#each concoctions as concoction, i (concoction.name)}
+			<li class="concoction-card item-reveal" style="animation-delay: {i * 20}ms">
+				<span class="concoction-name">{concoction.name}</span>
+				<span class="concoction-ingredients">{concoction.ingredients.join(' + ')}</span>
+			</li>
+		{/each}
 		</ul>
 	{/if}
 </div>

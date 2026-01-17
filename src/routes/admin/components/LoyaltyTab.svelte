@@ -559,7 +559,7 @@
 					
 					<!-- Punch Dots -->
 					<div class="punch-dots" aria-label="{selectedMember.punches} of 9 punches">
-						{#each Array(9) as _, i}
+						{#each Array(9) as _, i (i)}
 							{@const isFilled = i < selectedMember.punches}
 							{@const isMarkedForRemoval = isFilled && i >= selectedMember.punches - punchesToRemove}
 							{@const isPreview = !isFilled && i < selectedMember.punches + punchesToAdd && punchesToRemove === 0}

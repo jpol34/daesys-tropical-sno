@@ -29,8 +29,8 @@ export default [
 		rules: {
 			'svelte/no-navigation-without-resolve': 'off',
 			'svelte/require-each-key': 'warn',
-			'svelte/prefer-svelte-reactivity': 'warn',
-			'svelte/no-at-html-tags': 'warn',
+			'svelte/prefer-svelte-reactivity': 'off', // Date in validation is fine
+			'svelte/no-at-html-tags': 'off', // Used for trusted JSON-LD
 			'@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
 			'@typescript-eslint/no-unused-expressions': 'off'
 		}

@@ -394,9 +394,9 @@
 						aria-describedby={errors.eventType ? 'type-error' : undefined}
 					>
 						<option value="">Select event type...</option>
-						{#each eventTypes as type}
-							<option value={type}>{type}</option>
-						{/each}
+					{#each eventTypes as type (type)}
+						<option value={type}>{type}</option>
+					{/each}
 					</select>
 					{#if touched.eventType && errors.eventType}
 						<p id="type-error" class="form-error" role="alert">
