@@ -38,7 +38,7 @@
 	let isLoggingIn = $state(false);
 	
 	// Tab state
-	let activeTab = $state<'requests' | 'flavors' | 'concoctions' | 'specials' | 'loyalty'>('requests');
+	let activeTab = $state<'loyalty' | 'requests' | 'flavors' | 'concoctions' | 'specials'>('loyalty');
 	
 	// Requests state
 	let requests = $state<CateringRequest[]>([]);
@@ -714,6 +714,9 @@
 			
 			<!-- Tabs -->
 			<div class="tabs">
+				<button class="tab" class:active={activeTab === 'loyalty'} onclick={() => activeTab = 'loyalty'}>
+					🎫 Sno Squad <span class="badge">{loyaltyMembers.length}</span>
+				</button>
 				<button class="tab" class:active={activeTab === 'requests'} onclick={() => activeTab = 'requests'}>
 					📋 Requests <span class="badge">{requests.filter(r => r.status === 'new').length}</span>
 				</button>
@@ -725,9 +728,6 @@
 				</button>
 				<button class="tab" class:active={activeTab === 'specials'} onclick={() => activeTab = 'specials'}>
 					🎁 Specials
-				</button>
-				<button class="tab" class:active={activeTab === 'loyalty'} onclick={() => activeTab = 'loyalty'}>
-					🎫 Sno Squad <span class="badge">{loyaltyMembers.length}</span>
 				</button>
 			</div>
 			
