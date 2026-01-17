@@ -109,7 +109,7 @@
 	}
 
 	section {
-		margin-bottom: var(--space-xl);
+		margin-bottom: var(--space-md);
 	}
 
 	h2 {
