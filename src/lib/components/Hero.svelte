@@ -153,7 +153,7 @@
 		font-size: clamp(2.5rem, 8vw, 5rem);
 		color: var(--color-white);
 		text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
-		margin-bottom: var(--space-md);
+		margin-bottom: var(--space-lg);
 		animation: fadeInUp 0.6s ease-out;
 	}
 	
