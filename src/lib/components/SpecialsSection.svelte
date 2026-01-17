@@ -94,7 +94,7 @@
 				<h3>Sno Squad</h3>
 				<p class="loyalty-headline">Buy 9, Get 1 FREE!</p>
 				<p class="loyalty-details">Any size · Any toppings · Or a popsicle!</p>
-				<p class="loyalty-cta">Just give us your phone number at checkout to start earning.</p>
+				<p class="loyalty-cta">Join the Sno Squad at checkout to start earning.</p>
 			</div>
 		</div>
 	</div>
