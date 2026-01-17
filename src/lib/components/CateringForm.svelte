@@ -198,7 +198,7 @@
 				</div>
 				<div class="pricing-highlight">
 					<span class="highlight-icon" aria-hidden="true">🍧</span>
-					<span><strong>$3 per snow cone</strong> for events</span>
+					<span><strong>$3 per sno cone</strong> for events</span>
 				</div>
 			</div>
 		</div>
