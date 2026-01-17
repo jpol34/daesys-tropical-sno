@@ -228,29 +228,44 @@
 		
 		onUpdatingChange(true);
 		
-		const newPunches = Math.min(selectedMember.punches + punchesToAdd, 9);
-		const actualAdded = newPunches - selectedMember.punches;
+		const totalAfterAdd = selectedMember.punches + punchesToAdd;
+		const willTriggerRedeem = totalAfterAdd >= 9;
+		const carryOver = willTriggerRedeem ? totalAfterAdd - 9 : 0;
+		const finalPunches = willTriggerRedeem ? carryOver : totalAfterAdd;
 		
 		const { error } = await supabase
 			.from('loyalty_members')
 			.update({
-				punches: newPunches,
-				total_punches: selectedMember.total_punches + actualAdded,
+				punches: finalPunches,
+				total_punches: selectedMember.total_punches + punchesToAdd,
+				total_redeemed: willTriggerRedeem ? selectedMember.total_redeemed + 1 : selectedMember.total_redeemed,
 				last_visit: new Date().toISOString()
 			})
 			.eq('id', selectedMember.id);
 		
 		if (!error) {
+			// Log the punch action
 			await supabase.from('loyalty_history').insert({
 				member_id: selectedMember.id,
 				action: 'punch',
-				punch_count: actualAdded
+				punch_count: punchesToAdd
 			});
+			
+			// If redeemed, log that too
+			if (willTriggerRedeem) {
+				await supabase.from('loyalty_history').insert({
+					member_id: selectedMember.id,
+					action: 'redeem',
+					punch_count: null,
+					note: carryOver > 0 ? `${carryOver} punch${carryOver > 1 ? 'es' : ''} carried over` : null
+				});
+			}
 			
 			selectedMember = {
 				...selectedMember,
-				punches: newPunches,
-				total_punches: selectedMember.total_punches + actualAdded,
+				punches: finalPunches,
+				total_punches: selectedMember.total_punches + punchesToAdd,
+				total_redeemed: willTriggerRedeem ? selectedMember.total_redeemed + 1 : selectedMember.total_redeemed,
 				last_visit: new Date().toISOString()
 			};
 			
@@ -260,6 +275,11 @@
 			
 			punchesToAdd = 1;
 			await loadLoyaltyData();
+			
+			// Show feedback if auto-redeemed
+			if (willTriggerRedeem) {
+				alert(`🎉 Free sno cone redeemed!${carryOver > 0 ? `\n${carryOver} punch${carryOver > 1 ? 'es' : ''} carried over to new card.` : ''}`);
+			}
 		}
 		
 		onUpdatingChange(false);
@@ -539,10 +559,26 @@
 						</div>
 					{:else}
 						<div class="punch-actions">
+							<div class="punch-input-row">
+								<button class="punch-adjust" onclick={() => punchesToAdd = Math.max(1, punchesToAdd - 1)}>−</button>
+								<input 
+									type="number" 
+									class="punch-count-input" 
+									bind:value={punchesToAdd} 
+									min="1" 
+									max="20"
+								/>
+								<button class="punch-adjust" onclick={() => punchesToAdd = Math.min(20, punchesToAdd + 1)}>+</button>
+							</div>
 							<button class="btn btn-primary" onclick={addPunches} disabled={isUpdating}>
 								+ Add {punchesToAdd} Punch{punchesToAdd > 1 ? 'es' : ''}
 							</button>
-							{#if selectedMember.punches >= 7}
+							{#if selectedMember.punches + punchesToAdd >= 9}
+								{@const overflow = selectedMember.punches + punchesToAdd - 9}
+								<p class="overflow-notice">
+									🎉 Will redeem FREE SNO CONE{overflow > 0 ? ` + ${overflow} punch${overflow > 1 ? 'es' : ''} carry over` : ''}!
+								</p>
+							{:else if selectedMember.punches >= 7}
 								<p class="almost-there">🎉 {9 - selectedMember.punches} more until FREE SNO CONE!</p>
 							{/if}
 						</div>
@@ -980,6 +1016,70 @@
 		font-weight: 600;
 		font-size: 1.1rem;
 		margin-top: var(--space-md);
+	}
+	
+	.punch-input-row {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: var(--space-xs);
+		margin-bottom: var(--space-md);
+	}
+	
+	.punch-adjust {
+		width: 36px;
+		height: 36px;
+		border-radius: var(--radius-full);
+		border: 2px solid var(--color-gray-300);
+		background: var(--color-white);
+		font-size: 1.25rem;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all var(--transition-fast);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	
+	.punch-adjust:hover {
+		border-color: var(--color-blue);
+		background: var(--color-blue);
+		color: var(--color-white);
+	}
+	
+	.punch-count-input {
+		width: 60px;
+		text-align: center;
+		font-size: 1.25rem;
+		font-weight: 700;
+		padding: var(--space-xs) var(--space-sm);
+		border: 2px solid var(--color-gray-300);
+		border-radius: var(--radius-md);
+	}
+	
+	.punch-count-input:focus {
+		outline: none;
+		border-color: var(--color-blue);
+	}
+	
+	/* Hide number input spinners */
+	.punch-count-input::-webkit-outer-spin-button,
+	.punch-count-input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+	.punch-count-input[type=number] {
+		-moz-appearance: textfield;
+	}
+	
+	.overflow-notice {
+		color: #059669;
+		font-weight: 600;
+		font-size: 1rem;
+		margin-top: var(--space-md);
+		padding: var(--space-sm) var(--space-md);
+		background: #d1fae5;
+		border-radius: var(--radius-md);
 	}
 	
 	.reward-text {
