@@ -14,6 +14,9 @@
 <main id="main-content">
 	<Hero />
 	
+	<!-- Wave Divider -->
+	<div class="wave-divider yellow" aria-hidden="true"></div>
+	
 	<!-- Menu Section -->
 	<section id="menu" class="menu-section fade-in-section" aria-labelledby="menu-heading" use:inview>
 		<div class="container">
