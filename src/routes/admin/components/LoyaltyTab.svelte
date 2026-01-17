@@ -515,14 +515,13 @@
 							
 							<!-- Editable Phone -->
 							{#if editingPhone}
-								<input
-									type="tel"
-									class="inline-edit-input"
-									bind:value={tempPhone}
-									onblur={savePhone}
-									onkeydown={(e) => e.key === 'Enter' && savePhone()}
-									autofocus
-								/>
+							<input
+								type="tel"
+								class="inline-edit-input"
+								bind:value={tempPhone}
+								onblur={savePhone}
+								onkeydown={(e) => e.key === 'Enter' && savePhone()}
+							/>
 							{:else}
 								<button class="inline-editable" onclick={startEditPhone}>
 									{formatPhone(selectedMember.phone)}
@@ -532,15 +531,14 @@
 							
 							<!-- Editable Email -->
 							{#if editingEmail}
-								<input
-									type="email"
-									class="inline-edit-input"
-									placeholder="Add email..."
-									bind:value={tempEmail}
-									onblur={saveEmail}
-									onkeydown={(e) => e.key === 'Enter' && saveEmail()}
-									autofocus
-								/>
+							<input
+								type="email"
+								class="inline-edit-input"
+								placeholder="Add email..."
+								bind:value={tempEmail}
+								onblur={saveEmail}
+								onkeydown={(e) => e.key === 'Enter' && saveEmail()}
+							/>
 							{:else}
 								<button class="inline-editable" onclick={startEditEmail}>
 									{selectedMember.email || 'Add email...'}
@@ -1152,6 +1150,7 @@
 	}
 	.punch-count-input[type=number] {
 		-moz-appearance: textfield;
+		appearance: textfield;
 	}
 	
 	.overflow-notice {

@@ -193,10 +193,6 @@
 		animation: fadeInUp 0.6s ease-out 0.3s backwards;
 	}
 	
-	.hero-hours-icon {
-		font-size: 1.2em;
-	}
-	
 	.hero-cta {
 		display: flex;
 		flex-wrap: wrap;
@@ -234,40 +230,6 @@
 		background: var(--color-yellow);
 		color: var(--color-gray-900);
 		transform: translateY(-3px);
-	}
-	
-	.scroll-indicator {
-		position: absolute;
-		bottom: var(--space-xl);
-		left: 50%;
-		transform: translateX(-50%);
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: var(--space-sm);
-		color: var(--color-white);
-		opacity: 0.7;
-		animation: bounce 2s infinite;
-	}
-	
-	.scroll-text {
-		font-size: 0.75rem;
-		text-transform: uppercase;
-		letter-spacing: 0.1em;
-	}
-	
-	.scroll-arrow {
-		width: 20px;
-		height: 20px;
-		border-right: 2px solid currentColor;
-		border-bottom: 2px solid currentColor;
-		transform: rotate(45deg);
-	}
-	
-	@keyframes bounce {
-		0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
-		40% { transform: translateX(-50%) translateY(-10px); }
-		60% { transform: translateX(-50%) translateY(-5px); }
 	}
 	
 	@keyframes fadeInUp {
