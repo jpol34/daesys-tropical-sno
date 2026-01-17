@@ -9,6 +9,7 @@
 
 <main class="privacy-page">
 	<div class="container">
+		<a href="/" class="back-link top">← Back to Home</a>
 		<h1>Privacy Policy</h1>
 		<p class="last-updated">Last updated: January 17, 2026</p>
 
@@ -149,14 +150,21 @@
 		text-decoration: underline;
 	}
 
-	.back-link {
+.back-link {
 		display: inline-block;
-		margin-top: var(--space-lg);
 		color: var(--color-blue);
 		text-decoration: none;
 		font-weight: 500;
 	}
-
+	
+	.back-link.top {
+		margin-bottom: var(--space-md);
+	}
+	
+	.back-link:not(.top) {
+		margin-top: var(--space-lg);
+	}
+	
 	.back-link:hover {
 		text-decoration: underline;
 	}
