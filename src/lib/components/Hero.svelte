@@ -201,7 +201,7 @@
 		border-radius: var(--radius-full);
 		color: var(--color-white);
 		font-weight: 600;
-		margin-bottom: var(--space-lg);
+		margin-bottom: var(--space-md);
 		animation: fadeInUp 0.6s ease-out 0.3s backwards;
 	}
 	
