@@ -140,6 +140,7 @@
 		align-items: center;
 		padding: var(--space-sm);
 		background: var(--color-yellow);
+		border: 2px solid var(--color-blue);
 		border-radius: var(--radius-md);
 		transition: transform var(--transition-fast);
 	}
