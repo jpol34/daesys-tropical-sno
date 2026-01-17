@@ -20,7 +20,7 @@
 	<!-- Menu Section -->
 	<section id="menu" class="menu-section fade-in-section" aria-labelledby="menu-heading" use:inview>
 		<div class="container">
-			<h2 id="menu-heading" class="section-title text-center">Pick Your Chill</h2>
+			<h2 id="menu-heading" class="section-title text-center">Find Your Flavor</h2>
 			<p class="section-subtitle text-center">
 				From classic favorites to your own creations — find the perfect flavor!
 			</p>
