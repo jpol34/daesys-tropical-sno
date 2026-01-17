@@ -72,6 +72,12 @@
 	let selectedMember = $state<LoyaltyMember | null>(null);
 	let isSearching = $state(false);
 	let punchesToAdd = $state(1);
+	
+	// Inline editing state
+	let editingPhone = $state(false);
+	let editingEmail = $state(false);
+	let tempPhone = $state('');
+	let tempEmail = $state('');
 	let newMemberName = $state('');
 	let newMemberEmail = $state('');
 	let showNewMemberForm = $state(false);
@@ -438,6 +444,62 @@
 		selectedMember = member;
 		searchResults = [];
 		phoneSearch = formatPhone(member.phone);
+	}
+	
+	// Inline editing functions
+	function startEditPhone() {
+		if (selectedMember) {
+			tempPhone = formatPhone(selectedMember.phone);
+			editingPhone = true;
+		}
+	}
+	
+	function startEditEmail() {
+		if (selectedMember) {
+			tempEmail = selectedMember.email || '';
+			editingEmail = true;
+		}
+	}
+	
+	async function savePhone() {
+		if (!selectedMember) return;
+		const newPhone = normalizePhone(tempPhone);
+		if (newPhone.length !== 10) {
+			editingPhone = false;
+			return;
+		}
+		
+		const { error } = await supabase
+			.from('loyalty_members')
+			.update({ phone: newPhone })
+			.eq('id', selectedMember.id);
+		
+		if (!error) {
+			selectedMember = { ...selectedMember, phone: newPhone };
+			loyaltyMembers = loyaltyMembers.map(m => 
+				m.id === selectedMember!.id ? selectedMember! : m
+			);
+			phoneSearch = formatPhone(newPhone);
+		}
+		editingPhone = false;
+	}
+	
+	async function saveEmail() {
+		if (!selectedMember) return;
+		const newEmail = tempEmail.trim() || null;
+		
+		const { error } = await supabase
+			.from('loyalty_members')
+			.update({ email: newEmail })
+			.eq('id', selectedMember.id);
+		
+		if (!error) {
+			selectedMember = { ...selectedMember, email: newEmail };
+			loyaltyMembers = loyaltyMembers.map(m => 
+				m.id === selectedMember!.id ? selectedMember! : m
+			);
+		}
+		editingEmail = false;
 	}
 	
 	// Clear selection
@@ -1014,9 +1076,40 @@
 										<div class="member-header">
 											<div class="member-info">
 												<h2 class="member-name">{selectedMember.name}</h2>
-												<p class="member-phone">{formatPhone(selectedMember.phone)}</p>
-												{#if selectedMember.email}
-													<p class="member-email">{selectedMember.email}</p>
+												
+												<!-- Editable Phone -->
+												{#if editingPhone}
+													<input
+														type="tel"
+														class="inline-edit-input"
+														bind:value={tempPhone}
+														onblur={savePhone}
+														onkeydown={(e) => e.key === 'Enter' && savePhone()}
+														autofocus
+													/>
+												{:else}
+													<button class="inline-editable" onclick={startEditPhone}>
+														{formatPhone(selectedMember.phone)}
+														<span class="edit-hint">✎</span>
+													</button>
+												{/if}
+												
+												<!-- Editable Email -->
+												{#if editingEmail}
+													<input
+														type="email"
+														class="inline-edit-input"
+														placeholder="Add email..."
+														bind:value={tempEmail}
+														onblur={saveEmail}
+														onkeydown={(e) => e.key === 'Enter' && saveEmail()}
+														autofocus
+													/>
+												{:else}
+													<button class="inline-editable" onclick={startEditEmail}>
+														{selectedMember.email || 'Add email...'}
+														<span class="edit-hint">✎</span>
+													</button>
 												{/if}
 												<p class="member-meta">
 													Member since {new Date(selectedMember.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
@@ -1806,6 +1899,59 @@
 		font-size: 0.9rem;
 		color: var(--color-gray-500);
 		margin-bottom: var(--space-xs);
+	}
+	
+	/* Inline Editing */
+	.inline-editable {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-xs);
+		background: transparent;
+		border: none;
+		padding: var(--space-xs) 0;
+		font-size: inherit;
+		color: inherit;
+		cursor: pointer;
+		border-radius: var(--radius-sm);
+		transition: background var(--transition-fast);
+	}
+	
+	.inline-editable:hover {
+		background: var(--color-gray-100);
+		padding: var(--space-xs) var(--space-sm);
+		margin-left: calc(-1 * var(--space-sm));
+	}
+	
+	.inline-editable .edit-hint {
+		opacity: 0;
+		font-size: 0.8em;
+		color: var(--color-gray-400);
+		transition: opacity var(--transition-fast);
+	}
+	
+	.inline-editable:hover .edit-hint {
+		opacity: 1;
+	}
+	
+	.inline-edit-input {
+		font-size: inherit;
+		font-family: inherit;
+		padding: var(--space-xs) var(--space-sm);
+		border: 2px solid var(--color-blue);
+		border-radius: var(--radius-sm);
+		outline: none;
+		width: 100%;
+		max-width: 250px;
+	}
+	
+	.member-info .inline-editable {
+		font-size: 1rem;
+		color: var(--color-gray-600);
+	}
+	
+	.member-info .inline-editable:first-of-type {
+		font-size: 1.1rem;
+		color: var(--color-gray-700);
 	}
 	
 	.member-meta {
