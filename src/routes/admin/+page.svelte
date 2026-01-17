@@ -1050,7 +1050,8 @@
 												{/if}
 												<p class="member-meta">
 													Member since {new Date(selectedMember.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-													· {selectedMember.total_redeemed} lifetime reward{selectedMember.total_redeemed !== 1 ? 's' : ''}
+													· {selectedMember.total_punches} lifetime punch{selectedMember.total_punches !== 1 ? 'es' : ''}
+													· {selectedMember.total_redeemed} reward{selectedMember.total_redeemed !== 1 ? 's' : ''}
 												</p>
 											</div>
 											<div class="punch-count">
