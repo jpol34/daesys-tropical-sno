@@ -40,7 +40,6 @@
 			<span class="hero-highlight">40+ Flavors</span> • <span class="hero-highlight">56 Signature Concoctions</span>
 		</p>
 		<div class="hero-hours">
-			<span class="hero-hours-icon" aria-hidden="true">🕐</span>
 			<span>{businessInfo.hours.display}</span>
 		</div>
 		<div class="hero-cta">
