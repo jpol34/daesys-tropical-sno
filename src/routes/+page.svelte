@@ -19,7 +19,7 @@
 		<div class="container">
 			<h2 id="menu-heading" class="section-title text-center">Our Menu</h2>
 			<p class="section-subtitle text-center">
-				From classic favorites to tropical creations — find your perfect flavor!
+				From classic favorites to your own creations — find the perfect flavor!
 			</p>
 			
 			<ShareButtons />
