@@ -2,22 +2,8 @@
 	import '../app.css';
 	
 	let { children } = $props();
-</script>
-
-<svelte:head>
-	<title>Daesy's Tropical Sno | Arlington, TX</title>
-	<meta name="description" content="Daesy's Tropical Sno - 40+ flavors and 56 signature concoctions. Shaved ice, sno cones, and catering for events in Arlington, Texas. Open 1-8pm Tue-Sun." />
-	<meta name="keywords" content="sno cones, shaved ice, Arlington TX, tropical sno, catering, party, events" />
 	
-	<!-- Open Graph -->
-	<meta property="og:title" content="Daesy's Tropical Sno | Arlington, TX" />
-	<meta property="og:description" content="40+ flavors and 56 signature concoctions. Shaved ice and catering for events." />
-	<meta property="og:type" content="website" />
-	<meta property="og:locale" content="en_US" />
-	
-	<!-- LocalBusiness Schema -->
-	{@html `<script type="application/ld+json">
-	{
+	const jsonLd = JSON.stringify({
 		"@context": "https://schema.org",
 		"@type": "FoodEstablishment",
 		"name": "Daesy's Tropical Sno",
@@ -41,8 +27,22 @@
 		],
 		"priceRange": "$",
 		"servesCuisine": "Dessert"
-	}
-	</script>`}
+	});
+</script>
+
+<svelte:head>
+	<title>Daesy's Tropical Sno | Arlington, TX</title>
+	<meta name="description" content="Daesy's Tropical Sno - 40+ flavors and 56 signature concoctions. Shaved ice, sno cones, and catering for events in Arlington, Texas. Open 1-8pm Tue-Sun." />
+	<meta name="keywords" content="sno cones, shaved ice, Arlington TX, tropical sno, catering, party, events" />
+	
+	<!-- Open Graph -->
+	<meta property="og:title" content="Daesy's Tropical Sno | Arlington, TX" />
+	<meta property="og:description" content="40+ flavors and 56 signature concoctions. Shaved ice and catering for events." />
+	<meta property="og:type" content="website" />
+	<meta property="og:locale" content="en_US" />
+	
+	<!-- LocalBusiness Schema -->
+	{@html '<script type="application/ld+json">' + jsonLd + '</script>'}
 </svelte:head>
 
 <!-- Skip link for accessibility -->

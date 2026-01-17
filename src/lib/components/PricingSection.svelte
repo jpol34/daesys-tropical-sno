@@ -31,7 +31,7 @@
 			Size It Up
 		</h3>
 		<div class="sizes-grid">
-			{#each sizes as size}
+			{#each sizes as size (size.name)}
 				<div class="size-item">
 					<span class="size-name">{size.name}</span>
 					<span class="size-price">${size.price}</span>
@@ -52,7 +52,7 @@
 		<div class="toppings-group">
 			<h4 class="toppings-category">Candy</h4>
 			<ul class="toppings-list">
-				{#each candyToppings as topping}
+				{#each candyToppings as topping (topping)}
 					<li>{topping}</li>
 				{/each}
 			</ul>
@@ -61,7 +61,7 @@
 		<div class="toppings-group">
 			<h4 class="toppings-category">Cream</h4>
 			<ul class="toppings-list cream-list">
-				{#each creamToppings as topping}
+				{#each creamToppings as topping (topping)}
 					<li>{topping}</li>
 				{/each}
 			</ul>

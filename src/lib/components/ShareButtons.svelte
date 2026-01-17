@@ -20,7 +20,7 @@
 				text: shareText,
 				url: shareUrl
 			});
-		} catch (err) {
+		} catch {
 			// User cancelled or error
 			console.log('Share cancelled');
 		}
