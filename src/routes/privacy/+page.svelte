@@ -1,5 +1,26 @@
 <script>
 	import { businessInfo } from '$lib/data/businessInfo';
+	import { onMount } from 'svelte';
+
+	// #region agent log
+	onMount(() => {
+		const sections = document.querySelectorAll('.privacy-page section');
+		const h2s = document.querySelectorAll('.privacy-page h2');
+		const firstSection = sections[0];
+		const computedSection = firstSection ? getComputedStyle(firstSection) : null;
+		const computedH2 = h2s[0] ? getComputedStyle(h2s[0]) : null;
+		
+		// H1: Check for global overrides - log computed styles
+		fetch('http://127.0.0.1:7245/ingest/aefab1b7-12c8-43a1-8064-e548cf0a2970',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'privacy/+page.svelte:onMount',message:'Section computed styles',data:{sectionCount:sections.length,sectionMarginBottom:computedSection?.marginBottom,sectionMarginTop:computedSection?.marginTop,h2MarginBottom:computedH2?.marginBottom,h2MarginTop:computedH2?.marginTop},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H1'})}).catch(()=>{});
+		
+		// H2: Check if Svelte scoped classes are applied
+		fetch('http://127.0.0.1:7245/ingest/aefab1b7-12c8-43a1-8064-e548cf0a2970',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'privacy/+page.svelte:onMount',message:'Svelte scoping check',data:{sectionClassName:firstSection?.className,h2ClassName:h2s[0]?.className,mainClassName:document.querySelector('.privacy-page')?.className},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H2'})}).catch(()=>{});
+		
+		// H4: Check CSS variable values
+		const rootStyles = getComputedStyle(document.documentElement);
+		fetch('http://127.0.0.1:7245/ingest/aefab1b7-12c8-43a1-8064-e548cf0a2970',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'privacy/+page.svelte:onMount',message:'CSS variable values',data:{spaceXl:rootStyles.getPropertyValue('--space-xl'),spaceLg:rootStyles.getPropertyValue('--space-lg'),spaceMd:rootStyles.getPropertyValue('--space-md'),spaceSm:rootStyles.getPropertyValue('--space-sm')},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H4'})}).catch(()=>{});
+	});
+	// #endregion
 </script>
 
 <svelte:head>
