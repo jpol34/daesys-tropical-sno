@@ -757,7 +757,7 @@
 					🎁 Specials
 				</button>
 				<button class="tab" class:active={activeTab === 'loyalty'} onclick={() => activeTab = 'loyalty'}>
-					🎫 Loyalty <span class="badge">{loyaltyMembers.length}</span>
+					🎫 Sno Squad <span class="badge">{loyaltyMembers.length}</span>
 				</button>
 			</div>
 			
