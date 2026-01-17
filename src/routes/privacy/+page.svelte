@@ -9,7 +9,7 @@
 
 <main class="privacy-page">
 	<div class="container">
-		<a href="/" class="back-link top">← Back to Home</a>
+		<a href="/" class="back-link top">← Back to the Chill</a>
 		<h1>Privacy Policy</h1>
 		<p class="last-updated">Last updated: January 17, 2026</p>
 
@@ -79,7 +79,7 @@
 			</ul>
 		</section>
 
-		<a href="/" class="back-link">← Back to Home</a>
+		<a href="/" class="back-link">← Back to the Chill</a>
 	</div>
 </main>
 
