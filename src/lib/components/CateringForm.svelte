@@ -169,7 +169,31 @@
 			
 			<div class="catering-pricing">
 				<div class="pricing-highlight">
-					<span class="highlight-icon" aria-hidden="true">🚐</span>
+					<span class="highlight-icon vw-van" aria-hidden="true">
+						<svg viewBox="0 0 64 44" width="32" height="22">
+							<!-- Main body with curves -->
+							<path d="M8 36 L8 16 Q8 8 16 8 L56 8 Q62 8 62 16 L62 36 Q62 38 60 38 L10 38 Q8 38 8 36 Z" fill="#1565C0"/>
+							<!-- Curved roof -->
+							<path d="M12 16 Q12 10 20 10 L52 10 Q58 10 58 16" fill="#1565C0"/>
+							<!-- Big curved windshield -->
+							<path d="M10 18 Q10 12 18 12 L26 12 Q28 12 28 14 L28 26 Q28 28 26 28 L12 28 Q10 28 10 26 Z" fill="#B3E5FC"/>
+							<!-- Side windows with rounded corners -->
+							<rect x="32" y="14" width="11" height="12" rx="3" fill="#B3E5FC"/>
+							<rect x="46" y="14" width="11" height="12" rx="3" fill="#B3E5FC"/>
+							<!-- Yellow racing stripe -->
+							<path d="M8 28 L62 28 L62 32 L8 32 Z" fill="#FFD600"/>
+							<!-- VW emblem area -->
+							<ellipse cx="19" cy="20" rx="5" ry="5" fill="rgba(255,255,255,0.9)"/>
+							<!-- Wheels with hubcaps -->
+							<circle cx="18" cy="38" r="5" fill="#424242"/>
+							<circle cx="18" cy="38" r="2.5" fill="#9E9E9E"/>
+							<circle cx="50" cy="38" r="5" fill="#424242"/>
+							<circle cx="50" cy="38" r="2.5" fill="#9E9E9E"/>
+							<!-- Rounded bumper -->
+							<path d="M6 34 Q4 34 4 36 L4 38 Q4 40 6 40 L12 40" fill="#CFD8DC" stroke="none"/>
+							<path d="M58 34 Q60 34 62 36 L62 38 Q62 40 60 40 L54 40" fill="#CFD8DC" stroke="none"/>
+						</svg>
+					</span>
 					<span><strong>No travel fees</strong> — we come to you!</span>
 				</div>
 				<div class="pricing-highlight">

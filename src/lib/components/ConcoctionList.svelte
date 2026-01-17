@@ -29,7 +29,7 @@
 		<span class="concoction-icon" aria-hidden="true">🌺</span>
 		Popular Concoctions
 	</h3>
-	<p class="concoction-subtitle">Our signature combinations — plus a secret menu made by our customers!</p>
+	<p class="concoction-subtitle">Ask us about the secret menu — customer creations you won't find on the board!</p>
 	
 	{#if isLoading}
 		<div class="concoction-grid" aria-hidden="true">
