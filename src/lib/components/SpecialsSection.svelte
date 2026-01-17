@@ -6,7 +6,7 @@
 	<div class="container">
 		<h2 id="specials-heading" class="section-title text-center">
 			<span class="section-icon" aria-hidden="true">🎁</span>
-			Specials & More
+			Sweet Deals
 		</h2>
 		
 		<div class="specials-grid">
