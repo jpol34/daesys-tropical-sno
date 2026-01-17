@@ -105,35 +105,40 @@
 	.last-updated {
 		color: var(--color-gray-500);
 		font-size: 0.9rem;
-		margin-bottom: var(--space-xl);
+		margin-bottom: 1.5rem;
 	}
 
 	section {
-		margin-bottom: 1rem;
+		margin-bottom: 1.25rem;
 	}
 
 	h2 {
 		font-family: var(--font-heading);
-		font-size: 1.4rem;
+		font-size: 1.3rem;
 		color: var(--color-red);
-		margin-bottom: 0.25rem;
+		margin: 0 0 0.25rem 0;
 	}
 
 	p {
 		color: var(--color-gray-700);
-		line-height: 1.6;
-		margin-bottom: 0.25rem;
+		line-height: 1.5;
+		margin: 0 0 0.25rem 0;
+	}
+
+	section p:last-child,
+	section ul:last-child {
+		margin-bottom: 0;
 	}
 
 	ul {
 		color: var(--color-gray-700);
-		line-height: 1.5;
-		padding-left: var(--space-lg);
-		margin-bottom: 0;
+		line-height: 1.4;
+		padding-left: 1.25rem;
+		margin: 0;
 	}
 
 	li {
-		margin-bottom: 0;
+		margin: 0;
 	}
 
 	.contact-list {
