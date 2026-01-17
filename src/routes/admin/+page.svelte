@@ -1091,17 +1091,9 @@
 											</div>
 										{:else}
 											<div class="punch-actions">
-												<div class="add-punch-row">
-													<label for="punches-to-add" class="sr-only">Punches to add</label>
-													<select id="punches-to-add" class="form-select punch-select" bind:value={punchesToAdd}>
-														{#each Array(9 - selectedMember.punches) as _, i}
-															<option value={i + 1}>{i + 1} punch{i > 0 ? 'es' : ''}</option>
-														{/each}
-													</select>
-													<button class="btn btn-primary" onclick={addPunches} disabled={isUpdating}>
-														+ Add Punch{punchesToAdd > 1 ? 'es' : ''}
-													</button>
-												</div>
+												<button class="btn btn-primary" onclick={addPunches} disabled={isUpdating}>
+													+ Add {punchesToAdd} Punch{punchesToAdd > 1 ? 'es' : ''}
+												</button>
 												{#if selectedMember.punches >= 7}
 													<p class="almost-there">🎉 {9 - selectedMember.punches} more until FREE SNO CONE!</p>
 												{/if}
