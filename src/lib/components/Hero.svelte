@@ -38,7 +38,7 @@
 		</p>
 		<div class="hero-flavors">
 			<span class="hero-highlight">40+ Flavors</span>
-			<span class="hero-highlight">56 Signature Concoctions</span>
+			<span class="hero-highlight">55+ Signature Concoctions</span>
 			<span class="hero-highlight">Events & Parties</span>
 		</div>
 		<div class="hero-hours">
