@@ -1944,13 +1944,17 @@
 		max-width: 250px;
 	}
 	
-	.member-info .inline-editable {
-		font-size: 1rem;
+	.member-info .inline-editable,
+	.member-info .inline-edit-input {
+		display: block;
+		font-size: 0.95rem;
 		color: var(--color-gray-600);
+		margin-bottom: var(--space-xs);
 	}
 	
-	.member-info .inline-editable:first-of-type {
-		font-size: 1.1rem;
+	.member-info .inline-editable:first-of-type,
+	.member-info .inline-edit-input:first-of-type {
+		font-size: 1rem;
 		color: var(--color-gray-700);
 	}
 	
