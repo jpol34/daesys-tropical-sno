@@ -50,12 +50,6 @@
 	<meta property="og:image:height" content="630" />
 	<meta property="og:image:alt" content="Daesy's Tropical Sno - Tropical vibes and icy delights in Arlington, TX" />
 	
-	<!-- Twitter Card -->
-	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:title" content="Daesy's Tropical Sno | Arlington, TX" />
-	<meta name="twitter:description" content="40+ flavors and 55+ signature concoctions. Shaved ice and catering for events." />
-	<meta name="twitter:image" content="https://daesyssno.com/og-image.png" />
-	
 	<!-- LocalBusiness Schema -->
 	{@html '<script type="application/ld+json">' + jsonLd + '</script>'}
 </svelte:head>
