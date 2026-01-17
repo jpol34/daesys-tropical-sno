@@ -9,10 +9,7 @@
 </script>
 
 <div class="flavor-section">
-	<h3 class="flavor-title">
-		<span class="flavor-icon" aria-hidden="true">🍧</span>
-		Take Your Pick
-	</h3>
+	<h3 class="flavor-title">Take Your Pick</h3>
 
 	<ul class="flavor-grid" role="list">
 		{#each flavorNames as flavor, i (flavor)}
@@ -39,10 +36,6 @@
 		color: var(--color-blue);
 		margin-bottom: var(--space-sm);
 		text-align: center;
-	}
-
-	.flavor-icon {
-		font-size: 1.2em;
 	}
 
 	.flavor-grid {

@@ -6,10 +6,7 @@
 </script>
 
 <div class="concoction-section">
-	<h3 class="concoction-title">
-		<span class="concoction-icon" aria-hidden="true">🌺</span>
-		Trust the Pros
-	</h3>
+	<h3 class="concoction-title">Trust the Pros</h3>
 	<p class="concoction-subtitle">
 		Don't forget to ask about the secret menu — customer creations you won't find on the board!
 	</p>
@@ -42,10 +39,6 @@
 		color: var(--color-white);
 		margin-bottom: var(--space-sm);
 		text-align: center;
-	}
-
-	.concoction-icon {
-		font-size: 1.2em;
 	}
 
 	.concoction-subtitle {

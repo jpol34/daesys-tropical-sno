@@ -26,10 +26,7 @@
 <div class="pricing-section">
 	<!-- Sizes -->
 	<div class="pricing-card sizes-card">
-		<h3 class="pricing-title">
-			<span class="pricing-icon" aria-hidden="true">🍧</span>
-			Size It Up
-		</h3>
+		<h3 class="pricing-title">Size It Up</h3>
 		<div class="sizes-grid">
 			{#each sizes as size (size.name)}
 				<div class="size-item">
@@ -44,7 +41,6 @@
 	<!-- Toppings -->
 	<div class="pricing-card toppings-card">
 		<h3 class="pricing-title">
-			<span class="pricing-icon" aria-hidden="true">🍬</span>
 			Top It Off
 			<span class="topping-price">50¢ each</span>
 		</h3>
@@ -108,10 +104,6 @@
 		margin-bottom: var(--space-md);
 		text-align: center;
 		flex-wrap: wrap;
-	}
-
-	.pricing-icon {
-		font-size: 1.3em;
 	}
 
 	.topping-price {
