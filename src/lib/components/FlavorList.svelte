@@ -22,7 +22,7 @@
 <div class="flavor-section">
 	<h3 class="flavor-title">
 		<span class="flavor-icon" aria-hidden="true">🍧</span>
-		Our Flavors
+		Take Your Pick
 	</h3>
 	
 	{#if isLoading}
