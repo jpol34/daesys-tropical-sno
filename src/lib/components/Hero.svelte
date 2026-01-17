@@ -43,8 +43,8 @@
 			<span>{businessInfo.hours.display}</span>
 		</div>
 		<div class="hero-cta">
-			<a href="#menu" class="btn btn-secondary">View Menu</a>
-			<a href="#catering" class="btn btn-primary">Book Catering</a>
+			<a href="#menu" class="btn btn-secondary">View The Menu</a>
+			<a href="#catering" class="btn btn-primary">Book Your Event</a>
 		</div>
 		
 		<div class="hero-social">
