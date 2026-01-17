@@ -33,6 +33,9 @@
 		</div>
 	</section>
 	
+	<!-- Wave Divider -->
+	<div class="wave-divider yellow" aria-hidden="true"></div>
+	
 	<!-- Specials Section -->
 	<div class="fade-in-section" use:inview>
 		<SpecialsSection />
