@@ -36,16 +36,16 @@
 	<meta name="keywords" content="sno cones, shaved ice, Arlington TX, tropical sno, catering, party, events" />
 	
 	<!-- Canonical URL -->
-	<link rel="canonical" href="https://daesystropicalsno.com/" />
+	<link rel="canonical" href="https://daesyssno.com/" />
 	
 	<!-- Open Graph -->
 	<meta property="og:title" content="Daesy's Tropical Sno | Arlington, TX" />
 	<meta property="og:description" content="40+ flavors and 55+ signature concoctions. Shaved ice and catering for events in Arlington, TX." />
 	<meta property="og:type" content="website" />
 	<meta property="og:locale" content="en_US" />
-	<meta property="og:url" content="https://daesystropicalsno.com/" />
+	<meta property="og:url" content="https://daesyssno.com/" />
 	<meta property="og:site_name" content="Daesy's Tropical Sno" />
-	<meta property="og:image" content="https://daesystropicalsno.com/og-image.png" />
+	<meta property="og:image" content="https://daesyssno.com/og-image.png" />
 	<meta property="og:image:width" content="1200" />
 	<meta property="og:image:height" content="630" />
 	<meta property="og:image:alt" content="Daesy's Tropical Sno - Tropical vibes and icy delights in Arlington, TX" />
@@ -54,7 +54,7 @@
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content="Daesy's Tropical Sno | Arlington, TX" />
 	<meta name="twitter:description" content="40+ flavors and 55+ signature concoctions. Shaved ice and catering for events." />
-	<meta name="twitter:image" content="https://daesystropicalsno.com/og-image.png" />
+	<meta name="twitter:image" content="https://daesyssno.com/og-image.png" />
 	
 	<!-- LocalBusiness Schema -->
 	{@html '<script type="application/ld+json">' + jsonLd + '</script>'}
