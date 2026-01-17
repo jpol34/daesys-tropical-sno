@@ -18,6 +18,7 @@
 	let selectedMember = $state<LoyaltyMember | null>(null);
 	let isSearching = $state(false);
 	let punchesToAdd = $state(1);
+	let punchesToRemove = $state(0);
 	
 	// Inline editing state
 	let editingPhone = $state(false);
@@ -182,6 +183,7 @@
 		newMemberName = '';
 		newMemberEmail = '';
 		punchesToAdd = 1;
+		punchesToRemove = 0;
 	}
 	
 	// Add new loyalty member
@@ -274,6 +276,49 @@
 			);
 			
 			punchesToAdd = 1;
+			punchesToRemove = 0;
+			await loadLoyaltyData();
+		}
+		
+		onUpdatingChange(false);
+	}
+	
+	// Remove punches from member
+	async function removePunches() {
+		if (!selectedMember || punchesToRemove < 1) return;
+		
+		onUpdatingChange(true);
+		
+		const newPunches = Math.max(0, selectedMember.punches - punchesToRemove);
+		
+		const { error } = await supabase
+			.from('loyalty_members')
+			.update({
+				punches: newPunches,
+				last_visit: new Date().toISOString()
+			})
+			.eq('id', selectedMember.id);
+		
+		if (!error) {
+			await supabase.from('loyalty_history').insert({
+				member_id: selectedMember.id,
+				action: 'adjustment',
+				punch_count: -punchesToRemove,
+				note: `Removed ${punchesToRemove} punch${punchesToRemove > 1 ? 'es' : ''}`
+			});
+			
+			selectedMember = {
+				...selectedMember,
+				punches: newPunches,
+				last_visit: new Date().toISOString()
+			};
+			
+			loyaltyMembers = loyaltyMembers.map(m => 
+				m.id === selectedMember!.id ? selectedMember! : m
+			);
+			
+			punchesToAdd = 1;
+			punchesToRemove = 0;
 			await loadLoyaltyData();
 		}
 		
@@ -517,26 +562,41 @@
 					<!-- Punch Dots -->
 					<div class="punch-dots" aria-label="{selectedMember.punches} of 9 punches">
 						{#each Array(9) as _, i}
+							{@const isFilled = i < selectedMember.punches}
+							{@const isMarkedForRemoval = isFilled && i >= selectedMember.punches - punchesToRemove}
+							{@const isPreview = !isFilled && i < selectedMember.punches + punchesToAdd && punchesToRemove === 0}
 							<button 
 								type="button"
 								class="punch-dot" 
-								class:filled={i < selectedMember.punches}
-								class:preview={i >= selectedMember.punches && i < selectedMember.punches + punchesToAdd}
+								class:filled={isFilled && !isMarkedForRemoval}
+								class:removing={isMarkedForRemoval}
+								class:preview={isPreview}
 								onclick={() => {
-									if (selectedMember && i >= selectedMember.punches) {
-										const isPreview = i < selectedMember.punches + punchesToAdd;
-										if (isPreview) {
-											// Clicking a preview dot: set punchesToAdd to this position (or 1 if clicking first preview)
+									if (!selectedMember) return;
+									
+									if (isFilled) {
+										// Clicking a filled dot: mark for removal
+										const removeCount = selectedMember.punches - i;
+										if (punchesToRemove === removeCount) {
+											// Clicking same position: clear removal
+											punchesToRemove = 0;
+										} else {
+											punchesToRemove = removeCount;
+											punchesToAdd = 1; // Reset add preview
+										}
+									} else {
+										// Clicking empty/preview dot
+										punchesToRemove = 0; // Clear any removal selection
+										const isCurrentPreview = i < selectedMember.punches + punchesToAdd;
+										if (isCurrentPreview) {
 											const newCount = i - selectedMember.punches;
 											punchesToAdd = newCount > 0 ? newCount : 1;
 										} else {
-											// Clicking an empty dot: extend preview to this position
 											punchesToAdd = i - selectedMember.punches + 1;
 										}
 									}
 								}}
-								disabled={i < selectedMember.punches}
-								aria-label="Punch {i + 1}{i < selectedMember.punches ? ' (filled)' : ''}"
+								aria-label="Punch {i + 1}{isFilled ? ' (filled)' : ''}{isMarkedForRemoval ? ' (marked for removal)' : ''}"
 							></button>
 						{/each}
 					</div>
@@ -552,7 +612,18 @@
 								Skip for Now
 							</button>
 						</div>
+					{:else if punchesToRemove > 0}
+						<!-- Remove punches mode -->
+						<div class="punch-actions">
+							<button class="btn btn-remove" onclick={removePunches} disabled={isUpdating}>
+								− Remove {punchesToRemove} Punch{punchesToRemove > 1 ? 'es' : ''}
+							</button>
+							<button class="btn btn-secondary" onclick={() => punchesToRemove = 0}>
+								Cancel
+							</button>
+						</div>
 					{:else}
+						<!-- Add punches mode -->
 						<div class="punch-actions">
 							<div class="punch-input-row">
 								<button class="punch-adjust" onclick={() => punchesToAdd = Math.max(1, punchesToAdd - 1)}>−</button>
@@ -978,7 +1049,23 @@
 	.punch-dot.filled {
 		background: var(--color-blue);
 		border-color: var(--color-blue);
-		cursor: default;
+		cursor: pointer;
+	}
+	
+	.punch-dot.filled:hover {
+		opacity: 0.8;
+	}
+	
+	.punch-dot.removing {
+		background: var(--color-red);
+		border-color: var(--color-red);
+		cursor: pointer;
+		animation: pulse-remove 0.5s ease-in-out infinite alternate;
+	}
+	
+	@keyframes pulse-remove {
+		from { opacity: 1; }
+		to { opacity: 0.6; }
 	}
 	
 	.punch-dot.preview {
@@ -987,16 +1074,16 @@
 		cursor: pointer;
 	}
 	
-	.punch-dot:not(.filled):not(.preview) {
+	.punch-dot:not(.filled):not(.preview):not(.removing) {
 		cursor: pointer;
 	}
 	
-	.punch-dot:not(.filled):not(.preview):hover {
+	.punch-dot:not(.filled):not(.preview):not(.removing):hover {
 		border-color: var(--color-blue);
 		background: var(--color-gray-100);
 	}
 	
-	.member-card.reward-ready .punch-dot.filled {
+	.member-card.reward-ready .punch-dot.filled:not(.removing) {
 		background: var(--color-yellow);
 		border-color: var(--color-yellow);
 	}
@@ -1096,6 +1183,22 @@
 	}
 	
 	.btn-reward:hover { transform: scale(1.05); box-shadow: var(--shadow-lg); }
+	
+	.btn-remove {
+		background: var(--color-red);
+		color: var(--color-white);
+		font-weight: 700;
+		padding: var(--space-sm) var(--space-lg);
+		border-radius: var(--radius-md);
+		margin-bottom: var(--space-sm);
+		transition: all var(--transition-fast);
+	}
+	
+	.btn-remove:hover:not(:disabled) { 
+		background: #b91c1c;
+		transform: translateY(-2px); 
+		box-shadow: var(--shadow-md); 
+	}
 	
 	.member-card-footer {
 		display: flex;
