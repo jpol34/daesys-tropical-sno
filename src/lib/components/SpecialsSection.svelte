@@ -45,7 +45,22 @@
 			
 			<!-- Popsicle Wednesday -->
 			<div class="special-card popsicle">
-				<div class="special-icon" aria-hidden="true">🍦</div>
+				<div class="special-icon popsicle-icon" aria-hidden="true">
+					<svg viewBox="0 0 64 64" width="48" height="48">
+						<!-- Popsicle top (red) -->
+						<rect x="16" y="4" width="32" height="16" rx="8" fill="#E53935"/>
+						<!-- Popsicle middle (yellow) -->
+						<rect x="16" y="18" width="32" height="12" fill="#FFD600"/>
+						<!-- Popsicle bottom (blue) -->
+						<rect x="16" y="28" width="32" height="12" rx="0 0 4 4" fill="#1E88E5"/>
+						<!-- Rounded bottom -->
+						<path d="M16 36 L16 40 Q16 48 24 48 L40 48 Q48 48 48 40 L48 36 Z" fill="#1E88E5"/>
+						<!-- Stick -->
+						<rect x="28" y="46" width="8" height="16" rx="2" fill="#D7CCC8"/>
+						<!-- Shine highlight -->
+						<rect x="20" y="8" width="4" height="32" rx="2" fill="rgba(255,255,255,0.3)"/>
+					</svg>
+				</div>
 				<h3>Popsicle Wednesday</h3>
 				<p class="popsicle-cta">Ask about Popsicle Wednesday!</p>
 				<p class="popsicle-details">Every Wednesday we feature special popsicle flavors. Stop by or give us a call to see what's available this week!</p>

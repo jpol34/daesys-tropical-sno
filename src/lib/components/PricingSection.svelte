@@ -70,7 +70,6 @@
 	
 	<!-- Sugar-free note -->
 	<div class="sugar-free-banner">
-		<span class="sugar-free-icon" aria-hidden="true">🌿</span>
 		<span>Sugar-free options available!</span>
 	</div>
 </div>
