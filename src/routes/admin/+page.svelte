@@ -780,7 +780,7 @@
 					🎫 Sno Squad <span class="badge">{loyaltyMembers.length}</span>
 				</button>
 				<button class="tab" class:active={activeTab === 'requests'} onclick={() => activeTab = 'requests'}>
-					📋 Requests <span class="badge">{requests.filter(r => r.status === 'new').length}</span>
+					📋 Event Requests <span class="badge">{requests.filter(r => r.status === 'new').length}</span>
 				</button>
 				<button class="tab" class:active={activeTab === 'flavors'} onclick={() => activeTab = 'flavors'}>
 					🍧 Flavors <span class="badge">{flavors.filter(f => f.active).length}</span>
