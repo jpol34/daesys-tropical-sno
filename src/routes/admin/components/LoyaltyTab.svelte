@@ -509,7 +509,15 @@
 								class:preview={i >= selectedMember.punches && i < selectedMember.punches + punchesToAdd}
 								onclick={() => {
 									if (selectedMember && i >= selectedMember.punches) {
-										punchesToAdd = i - selectedMember.punches + 1;
+										const isPreview = i < selectedMember.punches + punchesToAdd;
+										if (isPreview) {
+											// Clicking a preview dot: set punchesToAdd to this position (or 1 if clicking first preview)
+											const newCount = i - selectedMember.punches;
+											punchesToAdd = newCount > 0 ? newCount : 1;
+										} else {
+											// Clicking an empty dot: extend preview to this position
+											punchesToAdd = i - selectedMember.punches + 1;
+										}
 									}
 								}}
 								disabled={i < selectedMember.punches}
