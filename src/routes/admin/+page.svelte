@@ -1943,13 +1943,13 @@
 		background: transparent;
 		border: none;
 		padding: var(--space-xs) var(--space-sm);
-		color: var(--color-gray-500);
+		color: var(--color-red);
 		font-size: 0.85rem;
 		cursor: pointer;
-		transition: color var(--transition-fast);
+		transition: opacity var(--transition-fast);
 	}
 	
-	.btn-delete-member:hover { color: var(--color-red); }
+	.btn-delete-member:hover { opacity: 0.7; }
 	
 	/* Stats Section */
 	.stats-grid {
