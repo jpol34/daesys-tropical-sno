@@ -17,7 +17,7 @@
 				<p>Follow us on social media for exclusive giveaways, raffles and seasonal treats throughout the year!</p>
 				<div class="social-links">
 					<a 
-						href={businessInfo.social.instagram} 
+						href={businessInfo.social.instagram.url} 
 						target="_blank" 
 						rel="noopener noreferrer"
 						class="social-btn instagram"
@@ -29,7 +29,7 @@
 						Instagram
 					</a>
 					<a 
-						href={businessInfo.social.facebook} 
+						href={businessInfo.social.facebook.url} 
 						target="_blank" 
 						rel="noopener noreferrer"
 						class="social-btn facebook"
