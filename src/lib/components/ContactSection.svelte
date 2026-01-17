@@ -4,7 +4,7 @@
 
 <section id="contact" class="contact-section" aria-labelledby="contact-heading">
 	<div class="container">
-		<h2 id="contact-heading" class="section-title">Visit Us</h2>
+		<h2 id="contact-heading" class="section-title">Come On By</h2>
 		
 		<div class="contact-grid">
 			<div class="contact-info">

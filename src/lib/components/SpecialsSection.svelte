@@ -65,6 +65,15 @@
 				<p class="popsicle-cta">Ask about Popsicle Wednesday!</p>
 				<p class="popsicle-details">Every Wednesday we feature special popsicle flavors. Stop by or give us a call to see what's available this week!</p>
 			</div>
+			
+			<!-- Loyalty Program -->
+			<div class="special-card loyalty">
+				<div class="special-icon" aria-hidden="true">🎫</div>
+				<h3>Loyalty Program</h3>
+				<p class="loyalty-headline">Buy 9, Get 1 FREE!</p>
+				<p class="loyalty-details">Any size · Any toppings · Or a popsicle!</p>
+				<p class="loyalty-cta">Just give us your phone number at checkout to start earning.</p>
+			</div>
 		</div>
 	</div>
 </section>
@@ -119,6 +128,10 @@
 	
 	.special-card.popsicle {
 		border-color: var(--color-blue-light);
+	}
+	
+	.special-card.loyalty {
+		border-color: var(--color-red);
 	}
 	
 	.special-icon {
@@ -202,6 +215,27 @@
 		font-size: 0.95rem;
 	}
 	
+	/* Loyalty card */
+	.loyalty-headline {
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: var(--color-red) !important;
+		margin-bottom: var(--space-xs) !important;
+	}
+	
+	.loyalty-details {
+		font-size: 1.1rem;
+		font-weight: 600;
+		color: var(--color-gray-700) !important;
+	}
+	
+	.loyalty-cta {
+		font-size: 0.95rem;
+		background: linear-gradient(90deg, var(--color-cream) 0%, rgba(239, 68, 68, 0.1) 50%, var(--color-cream) 100%);
+		padding: var(--space-sm) var(--space-md);
+		border-radius: var(--radius-md);
+	}
+	
 	/* Responsive */
 	@media (min-width: 768px) {
 		.specials-grid {
@@ -210,6 +244,26 @@
 		
 		.special-card {
 			padding: var(--space-2xl);
+		}
+		
+		/* Third card spans full width on tablet */
+		.special-card.loyalty {
+			grid-column: 1 / -1;
+			max-width: 450px;
+			margin: 0 auto;
+		}
+	}
+	
+	@media (min-width: 1024px) {
+		.specials-grid {
+			grid-template-columns: repeat(3, 1fr);
+			max-width: 1100px;
+		}
+		
+		.special-card.loyalty {
+			grid-column: auto;
+			max-width: none;
+			margin: 0;
 		}
 	}
 </style>

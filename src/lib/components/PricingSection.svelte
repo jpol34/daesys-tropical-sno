@@ -28,7 +28,7 @@
 	<div class="pricing-card sizes-card">
 		<h3 class="pricing-title">
 			<span class="pricing-icon" aria-hidden="true">🍧</span>
-			Sno Cone Sizes
+			Our Sizes
 		</h3>
 		<div class="sizes-grid">
 			{#each sizes as size}
@@ -45,7 +45,7 @@
 	<div class="pricing-card toppings-card">
 		<h3 class="pricing-title">
 			<span class="pricing-icon" aria-hidden="true">🍬</span>
-			Toppings
+			Our Toppings
 			<span class="topping-price">50¢ each</span>
 		</h3>
 		
