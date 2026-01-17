@@ -934,11 +934,11 @@
 							<button class="loyalty-nav-btn" class:active={loyaltyView === 'lookup'} onclick={() => loyaltyView = 'lookup'}>
 								📱 Lookup
 							</button>
-							<button class="loyalty-nav-btn" class:active={loyaltyView === 'stats'} onclick={() => loyaltyView = 'stats'}>
-								📊 Stats
-							</button>
 							<button class="loyalty-nav-btn" class:active={loyaltyView === 'members'} onclick={() => loyaltyView = 'members'}>
 								👥 All Members
+							</button>
+							<button class="loyalty-nav-btn" class:active={loyaltyView === 'stats'} onclick={() => loyaltyView = 'stats'}>
+								📊 Stats
 							</button>
 						</div>
 						
@@ -1077,6 +1077,45 @@
 							</div>
 						{/if}
 						
+						<!-- ===== ALL MEMBERS VIEW ===== -->
+						{#if loyaltyView === 'members'}
+							<div class="members-section">
+								<div class="members-list">
+									{#each loyaltyMembers as member (member.id)}
+										<div class="member-row">
+											<div class="member-row-info">
+												<span class="member-row-name">{member.name}</span>
+												<span class="member-row-phone">{formatPhone(member.phone)}</span>
+												{#if member.email}
+													<span class="member-row-email">{member.email}</span>
+												{/if}
+											</div>
+											<div class="member-row-stats">
+												<span class="member-row-punches">{member.punches}/9 punches</span>
+												<span class="member-row-lifetime-punches">{member.total_punches} lifetime</span>
+												<span class="member-row-rewards">{member.total_redeemed} rewards</span>
+												<span class="member-row-visit">Last: {formatRelativeTime(member.last_visit)}</span>
+											</div>
+											<div class="member-row-actions">
+												<button class="btn btn-small" onclick={() => { selectMember(member); loyaltyView = 'lookup'; }}>
+													View
+												</button>
+												<button class="btn btn-small btn-delete-small" onclick={() => deleteMember(member.id)}>
+													×
+												</button>
+											</div>
+										</div>
+									{/each}
+									{#if loyaltyMembers.length === 0}
+										<div class="empty-state">
+											<p>No loyalty members yet.</p>
+											<p>Use the Lookup tab to add your first member!</p>
+										</div>
+									{/if}
+								</div>
+							</div>
+						{/if}
+						
 						<!-- ===== STATS VIEW ===== -->
 						{#if loyaltyView === 'stats'}
 							<div class="stats-section">
@@ -1138,45 +1177,6 @@
 											{/if}
 										</div>
 									</div>
-								</div>
-							</div>
-						{/if}
-						
-						<!-- ===== ALL MEMBERS VIEW ===== -->
-						{#if loyaltyView === 'members'}
-							<div class="members-section">
-								<div class="members-list">
-									{#each loyaltyMembers as member (member.id)}
-										<div class="member-row">
-											<div class="member-row-info">
-												<span class="member-row-name">{member.name}</span>
-												<span class="member-row-phone">{formatPhone(member.phone)}</span>
-												{#if member.email}
-													<span class="member-row-email">{member.email}</span>
-												{/if}
-											</div>
-											<div class="member-row-stats">
-												<span class="member-row-punches">{member.punches}/9 punches</span>
-												<span class="member-row-lifetime-punches">{member.total_punches} lifetime</span>
-												<span class="member-row-rewards">{member.total_redeemed} rewards</span>
-												<span class="member-row-visit">Last: {formatRelativeTime(member.last_visit)}</span>
-											</div>
-											<div class="member-row-actions">
-												<button class="btn btn-small" onclick={() => { selectMember(member); loyaltyView = 'lookup'; }}>
-													View
-												</button>
-												<button class="btn btn-small btn-delete-small" onclick={() => deleteMember(member.id)}>
-													×
-												</button>
-											</div>
-										</div>
-									{/each}
-									{#if loyaltyMembers.length === 0}
-										<div class="empty-state">
-											<p>No loyalty members yet.</p>
-											<p>Use the Lookup tab to add your first member!</p>
-										</div>
-									{/if}
 								</div>
 							</div>
 						{/if}
