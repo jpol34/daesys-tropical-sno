@@ -75,20 +75,20 @@
 						<!-- Top decorative stripe -->
 						<rect x="2" y="4" width="60" height="10" rx="4" fill="#E53935"/>
 						<rect x="2" y="10" width="60" height="4" fill="#E53935"/>
-						<!-- Punch holes row 1 (filled - red) -->
-						<circle cx="12" cy="24" r="4" fill="#E53935"/>
-						<circle cx="24" cy="24" r="4" fill="#FFD600"/>
-						<circle cx="36" cy="24" r="4" fill="#1E88E5"/>
-						<circle cx="48" cy="24" r="4" fill="#E53935"/>
-						<!-- Punch holes row 2 (filled + empty) -->
-						<circle cx="12" cy="36" r="4" fill="#FFD600"/>
-						<circle cx="24" cy="36" r="4" fill="#1E88E5"/>
-						<circle cx="36" cy="36" r="4" fill="#E53935"/>
-						<!-- Empty punch hole -->
-						<circle cx="48" cy="36" r="4" fill="none" stroke="#CCCCCC" stroke-width="2" stroke-dasharray="3,2"/>
-						<!-- Star burst on free spot (aligned with row 2) -->
-						<circle cx="56" cy="36" r="5" fill="#FFD600"/>
-						<text x="56" y="39" text-anchor="middle" font-size="7" font-weight="bold" fill="#E53935">★</text>
+						<!-- Row 1: circles 1-5 -->
+						<circle cx="10" cy="24" r="4" fill="#E53935"/>
+						<circle cx="22" cy="24" r="4" fill="#FFD600"/>
+						<circle cx="34" cy="24" r="4" fill="#1E88E5"/>
+						<circle cx="46" cy="24" r="4" fill="#E53935"/>
+						<circle cx="58" cy="24" r="4" fill="#FFD600"/>
+						<!-- Row 2: circles 6-9 + FREE circle -->
+						<circle cx="10" cy="36" r="4" fill="#1E88E5"/>
+						<circle cx="22" cy="36" r="4" fill="#E53935"/>
+						<circle cx="34" cy="36" r="4" fill="#FFD600"/>
+						<circle cx="46" cy="36" r="4" fill="#1E88E5"/>
+						<!-- Circle 10: FREE with star -->
+						<circle cx="58" cy="36" r="4" fill="#FFD600"/>
+						<text x="58" y="39" text-anchor="middle" font-size="7" font-weight="bold" fill="#E53935">★</text>
 					</svg>
 				</div>
 				<h3>Sno Squad</h3>
