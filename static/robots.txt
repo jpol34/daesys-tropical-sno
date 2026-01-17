@@ -4,4 +4,7 @@ Allow: /
 Disallow: /admin
 
 # Sitemap
-Sitemap: https://daesystropicalsno.com/sitemap.xml
+Sitemap: https://daesyssno.com/sitemap.xml
+
+# LLM context
+# https://daesyssno.com/llms.txt

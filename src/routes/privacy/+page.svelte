@@ -4,7 +4,8 @@
 
 <svelte:head>
 	<title>Privacy Policy | Daesy's Tropical Sno</title>
-	<meta name="description" content="Privacy Policy for Daesy's Tropical Sno" />
+	<meta name="description" content="Privacy Policy for Daesy's Tropical Sno - Learn how we collect and protect your information." />
+	<link rel="canonical" href="https://daesystropicalsno.com/privacy" />
 </svelte:head>
 
 <main class="privacy-page">
