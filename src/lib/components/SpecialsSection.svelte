@@ -88,7 +88,7 @@
 						<circle cx="46" cy="36" r="4" fill="#1E88E5"/>
 						<!-- Circle 10: FREE with star -->
 						<circle cx="58" cy="36" r="4" fill="#FFD600"/>
-						<text x="58" y="39" text-anchor="middle" font-size="7" font-weight="bold" fill="#E53935">★</text>
+						<text x="58" y="36" text-anchor="middle" dominant-baseline="central" font-size="6" font-weight="bold" fill="#E53935">★</text>
 					</svg>
 				</div>
 				<h3>Sno Squad</h3>
