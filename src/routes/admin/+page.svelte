@@ -1208,9 +1208,6 @@
 													<button class="btn btn-small" onclick={() => { selectMember(member); loyaltyView = 'lookup'; }}>
 														View
 													</button>
-													<button class="btn btn-small" onclick={() => editingMember = { ...member }}>
-														Edit
-													</button>
 													<button class="btn btn-small btn-delete-small" onclick={() => deleteMember(member.id)}>
 														×
 													</button>
