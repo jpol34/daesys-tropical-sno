@@ -123,6 +123,28 @@
 		isUpdating = false;
 	}
 	
+	// Delete request
+	async function deleteRequest() {
+		if (!selectedRequest) return;
+		
+		const confirmed = confirm(`Are you sure you want to delete the request from "${selectedRequest.name}"?\n\nThis action cannot be undone.`);
+		if (!confirmed) return;
+		
+		isUpdating = true;
+		
+		const { error } = await supabase
+			.from('catering_requests')
+			.delete()
+			.eq('id', selectedRequest.id);
+		
+		if (!error) {
+			requests = requests.filter(r => r.id !== selectedRequest!.id);
+			selectedRequest = null;
+		}
+		
+		isUpdating = false;
+	}
+	
 	// Sync admin notes when selection changes
 	$effect(() => {
 		if (selectedRequest) {
@@ -338,6 +360,13 @@
 											{:else}
 												🌴 Save Notes
 											{/if}
+										</button>
+										<button 
+											class="btn btn-delete"
+											onclick={deleteRequest}
+											disabled={isUpdating}
+										>
+											🗑️ Delete
 										</button>
 										{#if notesSaved}
 											<span class="saved-indicator">✓ Saved!</span>
@@ -620,6 +649,28 @@
 	}
 	
 	.btn-save:disabled {
+		opacity: 0.7;
+		cursor: not-allowed;
+	}
+	
+	.btn-delete {
+		background: var(--color-gray-200);
+		color: var(--color-red);
+		font-weight: 600;
+		padding: var(--space-sm) var(--space-md);
+		border-radius: var(--radius-md);
+		display: flex;
+		align-items: center;
+		gap: var(--space-xs);
+		transition: all var(--transition-fast);
+	}
+	
+	.btn-delete:hover:not(:disabled) {
+		background: var(--color-red);
+		color: var(--color-white);
+	}
+	
+	.btn-delete:disabled {
 		opacity: 0.7;
 		cursor: not-allowed;
 	}
