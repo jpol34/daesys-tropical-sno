@@ -1071,7 +1071,12 @@
 											</div>
 										{/if}
 										
-										<button class="btn-close-member" onclick={clearSelection}>Done</button>
+										<div class="member-card-footer">
+											<button class="btn-close-member" onclick={clearSelection}>Done</button>
+											<button class="btn-delete-member" onclick={() => { if (selectedMember) deleteMember(selectedMember.id); }}>
+												🗑️ Delete Member
+											</button>
+										</div>
 									</div>
 								{/if}
 							</div>
@@ -1082,7 +1087,7 @@
 							<div class="members-section">
 								<div class="members-list">
 									{#each loyaltyMembers as member (member.id)}
-										<div class="member-row">
+										<button class="member-row" onclick={() => { selectMember(member); loyaltyView = 'lookup'; }}>
 											<div class="member-row-info">
 												<span class="member-row-name">{member.name}</span>
 												<span class="member-row-phone">{formatPhone(member.phone)}</span>
@@ -1096,15 +1101,7 @@
 												<span class="member-row-rewards">{member.total_redeemed} rewards</span>
 												<span class="member-row-visit">Last: {formatRelativeTime(member.last_visit)}</span>
 											</div>
-											<div class="member-row-actions">
-												<button class="btn btn-small" onclick={() => { selectMember(member); loyaltyView = 'lookup'; }}>
-													View
-												</button>
-												<button class="btn btn-small btn-delete-small" onclick={() => deleteMember(member.id)}>
-													×
-												</button>
-											</div>
-										</div>
+										</button>
 									{/each}
 									{#if loyaltyMembers.length === 0}
 										<div class="empty-state">
@@ -1933,6 +1930,27 @@
 	
 	.btn-close-member:hover { background: var(--color-gray-300); }
 	
+	.member-card-footer {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-top: var(--space-lg);
+		padding-top: var(--space-md);
+		border-top: 1px solid var(--color-gray-200);
+	}
+	
+	.btn-delete-member {
+		background: transparent;
+		border: none;
+		padding: var(--space-xs) var(--space-sm);
+		color: var(--color-gray-500);
+		font-size: 0.85rem;
+		cursor: pointer;
+		transition: color var(--transition-fast);
+	}
+	
+	.btn-delete-member:hover { color: var(--color-red); }
+	
 	/* Stats Section */
 	.stats-grid {
 		display: grid;
@@ -2029,6 +2047,16 @@
 		padding: var(--space-md);
 		background: var(--color-gray-100);
 		border-radius: var(--radius-md);
+		border: none;
+		width: 100%;
+		text-align: left;
+		cursor: pointer;
+		transition: all var(--transition-fast);
+	}
+	
+	.member-row:hover {
+		background: var(--color-gray-200);
+		transform: translateY(-1px);
 	}
 	
 	.member-row-info {
@@ -2052,31 +2080,6 @@
 	
 	.member-row-punches { color: var(--color-blue); font-weight: 600; }
 	
-	.member-row-actions {
-		display: flex;
-		gap: var(--space-xs);
-	}
-	
-	.edit-member-form {
-		display: flex;
-		flex-direction: column;
-		gap: var(--space-sm);
-	}
-	
-	.edit-punches {
-		display: flex;
-		align-items: center;
-		gap: var(--space-sm);
-	}
-	
-	.edit-punches .punch-input {
-		width: 80px;
-	}
-	
-	.edit-actions {
-		display: flex;
-		gap: var(--space-xs);
-	}
 	
 	.sr-only {
 		position: absolute;
