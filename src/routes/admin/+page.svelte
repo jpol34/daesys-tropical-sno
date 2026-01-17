@@ -1062,7 +1062,19 @@
 										<!-- Punch Dots -->
 										<div class="punch-dots" aria-label="{selectedMember.punches} of 9 punches">
 											{#each Array(9) as _, i}
-												<span class="punch-dot" class:filled={i < selectedMember.punches} aria-hidden="true"></span>
+												<button 
+													type="button"
+													class="punch-dot" 
+													class:filled={i < selectedMember.punches}
+													class:preview={i >= selectedMember.punches && i < selectedMember.punches + punchesToAdd}
+													onclick={() => {
+														if (selectedMember && i >= selectedMember.punches) {
+															punchesToAdd = i - selectedMember.punches + 1;
+														}
+													}}
+													disabled={i < selectedMember.punches}
+													aria-label="Punch {i + 1}{i < selectedMember.punches ? ' (filled)' : ''}"
+												></button>
 											{/each}
 										</div>
 										
@@ -1895,6 +1907,22 @@
 	.punch-dot.filled {
 		background: var(--color-blue);
 		border-color: var(--color-blue);
+		cursor: default;
+	}
+	
+	.punch-dot.preview {
+		background: var(--color-blue-light, #93c5fd);
+		border-color: var(--color-blue);
+		cursor: pointer;
+	}
+	
+	.punch-dot:not(.filled):not(.preview) {
+		cursor: pointer;
+	}
+	
+	.punch-dot:not(.filled):hover {
+		border-color: var(--color-blue);
+		background: var(--color-gray-100);
 	}
 	
 	.member-card.reward-ready .punch-dot.filled {
