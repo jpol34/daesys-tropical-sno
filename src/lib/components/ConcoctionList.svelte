@@ -27,7 +27,7 @@
 <div class="concoction-section">
 	<h3 class="concoction-title">
 		<span class="concoction-icon" aria-hidden="true">🌺</span>
-		Popular Concoctions
+		Trust the Pros
 	</h3>
 	<p class="concoction-subtitle">Don't forget to ask about the secret menu — customer creations you won't find on the board!</p>
 	
