@@ -1,14 +1,20 @@
 <script lang="ts">
 	import { supabase } from '$lib/supabase';
+	import { onMount } from 'svelte';
 	import type { LoyaltyMember, LoyaltyHistory } from '$lib/types';
-	
+
 	interface Props {
 		isUpdating: boolean;
 		onUpdatingChange: (value: boolean) => void;
 	}
-	
+
 	let { isUpdating, onUpdatingChange }: Props = $props();
-	
+
+	// Load data on mount
+	onMount(() => {
+		loadLoyaltyData();
+	});
+
 	// Loyalty state
 	let loyaltyMembers = $state<LoyaltyMember[]>([]);
 	let loyaltyHistory = $state<LoyaltyHistory[]>([]);
@@ -19,7 +25,7 @@
 	let isSearching = $state(false);
 	let punchesToAdd = $state(1);
 	let punchesToRemove = $state(0);
-	
+
 	// Inline editing state
 	let editingPhone = $state(false);
 	let editingEmail = $state(false);
@@ -29,35 +35,32 @@
 	let newMemberEmail = $state('');
 	let showNewMemberForm = $state(false);
 	let searchTimeout: ReturnType<typeof setTimeout> | null = null;
-	
+
 	// Load loyalty data
 	export async function loadLoyaltyData() {
 		const [membersRes, historyRes] = await Promise.all([
-			supabase
-				.from('loyalty_members')
-				.select('*')
-				.order('last_visit', { ascending: false }),
+			supabase.from('loyalty_members').select('*').order('last_visit', { ascending: false }),
 			supabase
 				.from('loyalty_history')
 				.select('*')
 				.order('created_at', { ascending: false })
 				.limit(50)
 		]);
-		
+
 		if (!membersRes.error) loyaltyMembers = membersRes.data || [];
 		if (!historyRes.error) {
-			loyaltyHistory = (historyRes.data || []).map(h => ({
+			loyaltyHistory = (historyRes.data || []).map((h) => ({
 				...h,
-				member_name: loyaltyMembers.find(m => m.id === h.member_id)?.name || 'Unknown'
+				member_name: loyaltyMembers.find((m) => m.id === h.member_id)?.name || 'Unknown'
 			}));
 		}
 	}
-	
+
 	// Normalize phone number to digits only
 	function normalizePhone(phone: string): string {
 		return phone.replace(/\D/g, '');
 	}
-	
+
 	// Format phone for display
 	function formatPhone(phone: string): string {
 		const digits = normalizePhone(phone);
@@ -66,12 +69,12 @@
 		}
 		return phone;
 	}
-	
+
 	// Handle phone input with auto-formatting
 	function handlePhoneInput(e: Event) {
 		const input = e.target as HTMLInputElement;
 		const digits = normalizePhone(input.value);
-		
+
 		if (digits.length <= 3) {
 			phoneSearch = digits;
 		} else if (digits.length <= 6) {
@@ -79,45 +82,45 @@
 		} else {
 			phoneSearch = `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
 		}
-		
+
 		if (searchTimeout) clearTimeout(searchTimeout);
 		searchTimeout = setTimeout(() => searchLoyaltyMembers(), 300);
 	}
-	
+
 	// Search for loyalty members
 	async function searchLoyaltyMembers() {
 		const searchDigits = normalizePhone(phoneSearch);
-		
+
 		if (searchDigits.length < 3) {
 			searchResults = [];
 			showNewMemberForm = false;
 			return;
 		}
-		
+
 		isSearching = true;
-		
+
 		const { data, error } = await supabase
 			.from('loyalty_members')
 			.select('*')
 			.or(`phone.ilike.%${searchDigits}%,name.ilike.%${phoneSearch}%`)
 			.limit(10);
-		
+
 		if (!error) {
 			searchResults = data || [];
-			const exactMatch = searchResults.find(m => normalizePhone(m.phone) === searchDigits);
+			const exactMatch = searchResults.find((m) => normalizePhone(m.phone) === searchDigits);
 			showNewMemberForm = searchDigits.length === 10 && !exactMatch;
 		}
-		
+
 		isSearching = false;
 	}
-	
+
 	// Select a member from search results
 	function selectMember(member: LoyaltyMember) {
 		selectedMember = member;
 		searchResults = [];
 		phoneSearch = formatPhone(member.phone);
 	}
-	
+
 	// Inline editing functions
 	function startEditPhone() {
 		if (selectedMember) {
@@ -125,14 +128,14 @@
 			editingPhone = true;
 		}
 	}
-	
+
 	function startEditEmail() {
 		if (selectedMember) {
 			tempEmail = selectedMember.email || '';
 			editingEmail = true;
 		}
 	}
-	
+
 	async function savePhone() {
 		if (!selectedMember) return;
 		const newPhone = normalizePhone(tempPhone);
@@ -140,40 +143,40 @@
 			editingPhone = false;
 			return;
 		}
-		
+
 		const { error } = await supabase
 			.from('loyalty_members')
 			.update({ phone: newPhone })
 			.eq('id', selectedMember.id);
-		
+
 		if (!error) {
 			selectedMember = { ...selectedMember, phone: newPhone };
-			loyaltyMembers = loyaltyMembers.map(m => 
+			loyaltyMembers = loyaltyMembers.map((m) =>
 				m.id === selectedMember!.id ? selectedMember! : m
 			);
 			phoneSearch = formatPhone(newPhone);
 		}
 		editingPhone = false;
 	}
-	
+
 	async function saveEmail() {
 		if (!selectedMember) return;
 		const newEmail = tempEmail.trim() || null;
-		
+
 		const { error } = await supabase
 			.from('loyalty_members')
 			.update({ email: newEmail })
 			.eq('id', selectedMember.id);
-		
+
 		if (!error) {
 			selectedMember = { ...selectedMember, email: newEmail };
-			loyaltyMembers = loyaltyMembers.map(m => 
+			loyaltyMembers = loyaltyMembers.map((m) =>
 				m.id === selectedMember!.id ? selectedMember! : m
 			);
 		}
 		editingEmail = false;
 	}
-	
+
 	// Clear selection
 	function clearSelection() {
 		selectedMember = null;
@@ -185,14 +188,14 @@
 		punchesToAdd = 1;
 		punchesToRemove = 0;
 	}
-	
+
 	// Add new loyalty member
 	async function addLoyaltyMember() {
 		const phone = normalizePhone(phoneSearch);
 		if (phone.length !== 10 || !newMemberName.trim()) return;
-		
+
 		onUpdatingChange(true);
-		
+
 		const { data, error } = await supabase
 			.from('loyalty_members')
 			.insert({
@@ -205,14 +208,14 @@
 			})
 			.select()
 			.single();
-		
+
 		if (!error && data) {
 			await supabase.from('loyalty_history').insert({
 				member_id: data.id,
 				action: 'punch',
 				punch_count: 1
 			});
-			
+
 			loyaltyMembers = [data, ...loyaltyMembers];
 			selectedMember = data;
 			showNewMemberForm = false;
@@ -220,31 +223,33 @@
 			newMemberEmail = '';
 			await loadLoyaltyData();
 		}
-		
+
 		onUpdatingChange(false);
 	}
-	
+
 	// Add punches to member
 	async function addPunches() {
 		if (!selectedMember || punchesToAdd < 1) return;
-		
+
 		onUpdatingChange(true);
-		
+
 		const totalAfterAdd = selectedMember.punches + punchesToAdd;
 		const willTriggerRedeem = totalAfterAdd >= 9;
 		const carryOver = willTriggerRedeem ? totalAfterAdd - 9 : 0;
 		const finalPunches = willTriggerRedeem ? carryOver : totalAfterAdd;
-		
+
 		const { error } = await supabase
 			.from('loyalty_members')
 			.update({
 				punches: finalPunches,
 				total_punches: selectedMember.total_punches + punchesToAdd,
-				total_redeemed: willTriggerRedeem ? selectedMember.total_redeemed + 1 : selectedMember.total_redeemed,
+				total_redeemed: willTriggerRedeem
+					? selectedMember.total_redeemed + 1
+					: selectedMember.total_redeemed,
 				last_visit: new Date().toISOString()
 			})
 			.eq('id', selectedMember.id);
-		
+
 		if (!error) {
 			// Log the punch action
 			await supabase.from('loyalty_history').insert({
@@ -252,7 +257,7 @@
 				action: 'punch',
 				punch_count: punchesToAdd
 			});
-			
+
 			// If redeemed, log that too
 			if (willTriggerRedeem) {
 				await supabase.from('loyalty_history').insert({
@@ -262,35 +267,37 @@
 					note: carryOver > 0 ? `${carryOver} punch${carryOver > 1 ? 'es' : ''} carried over` : null
 				});
 			}
-			
+
 			selectedMember = {
 				...selectedMember,
 				punches: finalPunches,
 				total_punches: selectedMember.total_punches + punchesToAdd,
-				total_redeemed: willTriggerRedeem ? selectedMember.total_redeemed + 1 : selectedMember.total_redeemed,
+				total_redeemed: willTriggerRedeem
+					? selectedMember.total_redeemed + 1
+					: selectedMember.total_redeemed,
 				last_visit: new Date().toISOString()
 			};
-			
-			loyaltyMembers = loyaltyMembers.map(m => 
+
+			loyaltyMembers = loyaltyMembers.map((m) =>
 				m.id === selectedMember!.id ? selectedMember! : m
 			);
-			
+
 			punchesToAdd = 1;
 			punchesToRemove = 0;
 			await loadLoyaltyData();
 		}
-		
+
 		onUpdatingChange(false);
 	}
-	
+
 	// Remove punches from member
 	async function removePunches() {
 		if (!selectedMember || punchesToRemove < 1) return;
-		
+
 		onUpdatingChange(true);
-		
+
 		const newPunches = Math.max(0, selectedMember.punches - punchesToRemove);
-		
+
 		const { error } = await supabase
 			.from('loyalty_members')
 			.update({
@@ -298,7 +305,7 @@
 				last_visit: new Date().toISOString()
 			})
 			.eq('id', selectedMember.id);
-		
+
 		if (!error) {
 			await supabase.from('loyalty_history').insert({
 				member_id: selectedMember.id,
@@ -306,31 +313,31 @@
 				punch_count: -punchesToRemove,
 				note: `Removed ${punchesToRemove} punch${punchesToRemove > 1 ? 'es' : ''}`
 			});
-			
+
 			selectedMember = {
 				...selectedMember,
 				punches: newPunches,
 				last_visit: new Date().toISOString()
 			};
-			
-			loyaltyMembers = loyaltyMembers.map(m => 
+
+			loyaltyMembers = loyaltyMembers.map((m) =>
 				m.id === selectedMember!.id ? selectedMember! : m
 			);
-			
+
 			punchesToAdd = 1;
 			punchesToRemove = 0;
 			await loadLoyaltyData();
 		}
-		
+
 		onUpdatingChange(false);
 	}
-	
+
 	// Redeem reward
 	async function redeemReward() {
 		if (!selectedMember || selectedMember.punches < 9) return;
-		
+
 		onUpdatingChange(true);
-		
+
 		const { error } = await supabase
 			.from('loyalty_members')
 			.update({
@@ -339,65 +346,65 @@
 				last_visit: new Date().toISOString()
 			})
 			.eq('id', selectedMember.id);
-		
+
 		if (!error) {
 			await supabase.from('loyalty_history').insert({
 				member_id: selectedMember.id,
 				action: 'redeem',
 				punch_count: null
 			});
-			
+
 			selectedMember = {
 				...selectedMember,
 				punches: 0,
 				total_redeemed: selectedMember.total_redeemed + 1,
 				last_visit: new Date().toISOString()
 			};
-			
-			loyaltyMembers = loyaltyMembers.map(m => 
+
+			loyaltyMembers = loyaltyMembers.map((m) =>
 				m.id === selectedMember!.id ? selectedMember! : m
 			);
-			
+
 			await loadLoyaltyData();
 		}
-		
+
 		onUpdatingChange(false);
 	}
-	
+
 	// Delete member
 	async function deleteMember(id: string) {
-		const member = loyaltyMembers.find(m => m.id === id);
+		const member = loyaltyMembers.find((m) => m.id === id);
 		const confirmed = confirm(`Delete ${member?.name}'s loyalty card? This cannot be undone.`);
 		if (!confirmed) return;
-		
+
 		onUpdatingChange(true);
-		
+
 		const { error } = await supabase.from('loyalty_members').delete().eq('id', id);
-		
+
 		if (!error) {
-			loyaltyMembers = loyaltyMembers.filter(m => m.id !== id);
+			loyaltyMembers = loyaltyMembers.filter((m) => m.id !== id);
 			if (selectedMember?.id === id) {
 				clearSelection();
 			}
 		}
-		
+
 		onUpdatingChange(false);
 	}
-	
+
 	// Stats calculations
 	let loyaltyStats = $derived({
 		totalMembers: loyaltyMembers.length,
 		totalPunchesThisMonth: loyaltyHistory
-			.filter(h => h.action === 'punch' && new Date(h.created_at).getMonth() === new Date().getMonth())
+			.filter(
+				(h) => h.action === 'punch' && new Date(h.created_at).getMonth() === new Date().getMonth()
+			)
 			.reduce((sum, h) => sum + (h.punch_count || 0), 0),
-		totalRedeemedThisMonth: loyaltyHistory
-			.filter(h => h.action === 'redeem' && new Date(h.created_at).getMonth() === new Date().getMonth())
-			.length,
-		topCustomers: [...loyaltyMembers]
-			.sort((a, b) => b.total_punches - a.total_punches)
-			.slice(0, 10)
+		totalRedeemedThisMonth: loyaltyHistory.filter(
+			(h) => h.action === 'redeem' && new Date(h.created_at).getMonth() === new Date().getMonth()
+		).length,
+		topCustomers: [...loyaltyMembers].sort((a, b) => b.total_punches - a.total_punches).slice(0, 10)
 	});
-	
+
 	// Format relative time
 	function formatRelativeTime(dateStr: string): string {
 		const date = new Date(dateStr);
@@ -406,19 +413,19 @@
 		const diffMins = Math.floor(diffMs / 60000);
 		const diffHours = Math.floor(diffMs / 3600000);
 		const diffDays = Math.floor(diffMs / 86400000);
-		
+
 		if (diffMins < 1) return 'just now';
 		if (diffMins < 60) return `${diffMins} min ago`;
 		if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
 		if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
 		return date.toLocaleDateString();
 	}
-	
+
 	// Export member count for parent badge
 	export function getMemberCount() {
 		return loyaltyMembers.length;
 	}
-	
+
 	// Select member and switch to lookup (for members list)
 	function selectMemberAndLookup(member: LoyaltyMember) {
 		selectMember(member);
@@ -429,17 +436,29 @@
 <div class="loyalty-section">
 	<!-- Sub-navigation -->
 	<div class="loyalty-nav">
-		<button class="loyalty-nav-btn" class:active={loyaltyView === 'lookup'} onclick={() => loyaltyView = 'lookup'}>
+		<button
+			class="loyalty-nav-btn"
+			class:active={loyaltyView === 'lookup'}
+			onclick={() => (loyaltyView = 'lookup')}
+		>
 			📱 Lookup
 		</button>
-		<button class="loyalty-nav-btn" class:active={loyaltyView === 'members'} onclick={() => loyaltyView = 'members'}>
+		<button
+			class="loyalty-nav-btn"
+			class:active={loyaltyView === 'members'}
+			onclick={() => (loyaltyView = 'members')}
+		>
 			👥 All Members
 		</button>
-		<button class="loyalty-nav-btn" class:active={loyaltyView === 'stats'} onclick={() => loyaltyView = 'stats'}>
+		<button
+			class="loyalty-nav-btn"
+			class:active={loyaltyView === 'stats'}
+			onclick={() => (loyaltyView = 'stats')}
+		>
 			📊 Stats
 		</button>
 	</div>
-	
+
 	<!-- ===== LOOKUP VIEW ===== -->
 	{#if loyaltyView === 'lookup'}
 		<div class="lookup-section">
@@ -460,7 +479,7 @@
 						<button class="clear-btn" onclick={clearSelection} aria-label="Clear">×</button>
 					{/if}
 				</div>
-				
+
 				<!-- Search Results Dropdown -->
 				{#if searchResults.length > 0 && !selectedMember}
 					<div class="search-results">
@@ -473,25 +492,41 @@
 						{/each}
 					</div>
 				{/if}
-				
+
 				<!-- New Member Form -->
 				{#if showNewMemberForm && !selectedMember}
 					<div class="new-member-form">
 						<p class="new-member-notice">📱 No member found for {phoneSearch}</p>
 						<div class="form-group">
 							<label for="new-name" class="form-label">Name</label>
-							<input id="new-name" type="text" class="form-input" placeholder="Customer name" bind:value={newMemberName} />
+							<input
+								id="new-name"
+								type="text"
+								class="form-input"
+								placeholder="Customer name"
+								bind:value={newMemberName}
+							/>
 						</div>
 						<div class="form-group">
 							<label for="new-email" class="form-label">Email (optional)</label>
-							<input id="new-email" type="email" class="form-input" placeholder="email@example.com" bind:value={newMemberEmail} />
+							<input
+								id="new-email"
+								type="email"
+								class="form-input"
+								placeholder="email@example.com"
+								bind:value={newMemberEmail}
+							/>
 						</div>
-						<button class="btn btn-primary" onclick={addLoyaltyMember} disabled={isUpdating || !newMemberName.trim()}>
+						<button
+							class="btn btn-primary"
+							onclick={addLoyaltyMember}
+							disabled={isUpdating || !newMemberName.trim()}
+						>
 							+ Add Member & First Punch
 						</button>
 					</div>
 				{/if}
-				
+
 				<!-- Searching indicator -->
 				{#if isSearching}
 					<div class="searching-indicator">
@@ -499,46 +534,44 @@
 					</div>
 				{/if}
 			</div>
-			
+
 			<!-- Selected Member Card -->
 			{#if selectedMember}
 				<div class="member-card" class:reward-ready={selectedMember.punches >= 9}>
 					{#if selectedMember.punches >= 9}
-						<div class="reward-banner">
-							🎉 FREE SNO CONE EARNED!
-						</div>
+						<div class="reward-banner">🎉 FREE SNO CONE EARNED!</div>
 					{/if}
-					
+
 					<div class="member-header">
 						<div class="member-info">
 							<h2 class="member-name">{selectedMember.name}</h2>
-							
+
 							<!-- Editable Phone -->
 							{#if editingPhone}
-							<input
-								type="tel"
-								class="inline-edit-input"
-								bind:value={tempPhone}
-								onblur={savePhone}
-								onkeydown={(e) => e.key === 'Enter' && savePhone()}
-							/>
+								<input
+									type="tel"
+									class="inline-edit-input"
+									bind:value={tempPhone}
+									onblur={savePhone}
+									onkeydown={(e) => e.key === 'Enter' && savePhone()}
+								/>
 							{:else}
 								<button class="inline-editable" onclick={startEditPhone}>
 									{formatPhone(selectedMember.phone)}
 									<span class="edit-hint">✎</span>
 								</button>
 							{/if}
-							
+
 							<!-- Editable Email -->
 							{#if editingEmail}
-							<input
-								type="email"
-								class="inline-edit-input"
-								placeholder="Add email..."
-								bind:value={tempEmail}
-								onblur={saveEmail}
-								onkeydown={(e) => e.key === 'Enter' && saveEmail()}
-							/>
+								<input
+									type="email"
+									class="inline-edit-input"
+									placeholder="Add email..."
+									bind:value={tempEmail}
+									onblur={saveEmail}
+									onkeydown={(e) => e.key === 'Enter' && saveEmail()}
+								/>
 							{:else}
 								<button class="inline-editable" onclick={startEditEmail}>
 									{selectedMember.email || 'Add email...'}
@@ -546,9 +579,16 @@
 								</button>
 							{/if}
 							<p class="member-meta">
-								Member since {new Date(selectedMember.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-								· {selectedMember.total_punches} lifetime punch{selectedMember.total_punches !== 1 ? 'es' : ''}
-								· {selectedMember.total_redeemed} reward{selectedMember.total_redeemed !== 1 ? 's' : ''}
+								Member since {new Date(selectedMember.created_at).toLocaleDateString('en-US', {
+									month: 'short',
+									year: 'numeric'
+								})}
+								· {selectedMember.total_punches} lifetime punch{selectedMember.total_punches !== 1
+									? 'es'
+									: ''}
+								· {selectedMember.total_redeemed} reward{selectedMember.total_redeemed !== 1
+									? 's'
+									: ''}
 							</p>
 						</div>
 						<div class="punch-count">
@@ -556,22 +596,24 @@
 							<span class="punch-label">/9</span>
 						</div>
 					</div>
-					
+
 					<!-- Punch Dots -->
 					<div class="punch-dots" aria-label="{selectedMember.punches} of 9 punches">
 						{#each Array(9) as _, i (i)}
 							{@const isFilled = i < selectedMember.punches}
-							{@const isMarkedForRemoval = isFilled && i >= selectedMember.punches - punchesToRemove}
-							{@const isPreview = !isFilled && i < selectedMember.punches + punchesToAdd && punchesToRemove === 0}
-							<button 
+							{@const isMarkedForRemoval =
+								isFilled && i >= selectedMember.punches - punchesToRemove}
+							{@const isPreview =
+								!isFilled && i < selectedMember.punches + punchesToAdd && punchesToRemove === 0}
+							<button
 								type="button"
-								class="punch-dot" 
+								class="punch-dot"
 								class:filled={isFilled && !isMarkedForRemoval}
 								class:removing={isMarkedForRemoval}
 								class:preview={isPreview}
 								onclick={() => {
 									if (!selectedMember) return;
-									
+
 									if (isFilled) {
 										// Clicking a filled dot: mark for removal
 										const removeCount = selectedMember.punches - i;
@@ -594,11 +636,13 @@
 										}
 									}
 								}}
-								aria-label="Punch {i + 1}{isFilled ? ' (filled)' : ''}{isMarkedForRemoval ? ' (marked for removal)' : ''}"
+								aria-label="Punch {i + 1}{isFilled ? ' (filled)' : ''}{isMarkedForRemoval
+									? ' (marked for removal)'
+									: ''}"
 							></button>
 						{/each}
 					</div>
-					
+
 					<!-- Actions -->
 					{#if selectedMember.punches >= 9}
 						<div class="reward-actions">
@@ -606,9 +650,7 @@
 							<button class="btn btn-reward" onclick={redeemReward} disabled={isUpdating}>
 								🎁 Redeem Reward
 							</button>
-							<button class="btn btn-secondary" onclick={clearSelection}>
-								Skip for Now
-							</button>
+							<button class="btn btn-secondary" onclick={clearSelection}> Skip for Now </button>
 						</div>
 					{:else if punchesToRemove > 0}
 						<!-- Remove punches mode -->
@@ -616,7 +658,7 @@
 							<button class="btn btn-remove" onclick={removePunches} disabled={isUpdating}>
 								− Remove {punchesToRemove} Punch{punchesToRemove > 1 ? 'es' : ''}
 							</button>
-							<button class="btn btn-secondary" onclick={() => punchesToRemove = 0}>
+							<button class="btn btn-secondary" onclick={() => (punchesToRemove = 0)}>
 								Cancel
 							</button>
 						</div>
@@ -624,15 +666,21 @@
 						<!-- Add punches mode -->
 						<div class="punch-actions">
 							<div class="punch-input-row">
-								<button class="punch-adjust" onclick={() => punchesToAdd = Math.max(1, punchesToAdd - 1)}>−</button>
-								<input 
-									type="number" 
-									class="punch-count-input" 
-									bind:value={punchesToAdd} 
-									min="1" 
+								<button
+									class="punch-adjust"
+									onclick={() => (punchesToAdd = Math.max(1, punchesToAdd - 1))}>−</button
+								>
+								<input
+									type="number"
+									class="punch-count-input"
+									bind:value={punchesToAdd}
+									min="1"
 									max="20"
 								/>
-								<button class="punch-adjust" onclick={() => punchesToAdd = Math.min(20, punchesToAdd + 1)}>+</button>
+								<button
+									class="punch-adjust"
+									onclick={() => (punchesToAdd = Math.min(20, punchesToAdd + 1))}>+</button
+								>
 							</div>
 							<button class="btn btn-primary" onclick={addPunches} disabled={isUpdating}>
 								+ Add {punchesToAdd} Punch{punchesToAdd > 1 ? 'es' : ''}
@@ -640,16 +688,25 @@
 							{#if selectedMember.punches + punchesToAdd >= 9}
 								{@const overflow = selectedMember.punches + punchesToAdd - 9}
 								<p class="overflow-notice">
-									🎉 Will redeem FREE SNO CONE{overflow > 0 ? ` + ${overflow} punch${overflow > 1 ? 'es' : ''} carry over` : ''}!
+									🎉 Will redeem FREE SNO CONE{overflow > 0
+										? ` + ${overflow} punch${overflow > 1 ? 'es' : ''} carry over`
+										: ''}!
 								</p>
 							{:else if selectedMember.punches >= 7}
-								<p class="almost-there">🎉 {9 - selectedMember.punches} more until FREE SNO CONE!</p>
+								<p class="almost-there">
+									🎉 {9 - selectedMember.punches} more until FREE SNO CONE!
+								</p>
 							{/if}
 						</div>
 					{/if}
-					
+
 					<div class="member-card-footer">
-						<button class="btn-delete-member" onclick={() => { if (selectedMember) deleteMember(selectedMember.id); }}>
+						<button
+							class="btn-delete-member"
+							onclick={() => {
+								if (selectedMember) deleteMember(selectedMember.id);
+							}}
+						>
 							🗑️ Delete Member
 						</button>
 					</div>
@@ -657,7 +714,7 @@
 			{/if}
 		</div>
 	{/if}
-	
+
 	<!-- ===== ALL MEMBERS VIEW ===== -->
 	{#if loyaltyView === 'members'}
 		<div class="members-section">
@@ -688,7 +745,7 @@
 			</div>
 		</div>
 	{/if}
-	
+
 	<!-- ===== STATS VIEW ===== -->
 	{#if loyaltyView === 'stats'}
 		<div class="stats-section">
@@ -706,7 +763,7 @@
 					<span class="stat-label">Redeemed This Month</span>
 				</div>
 			</div>
-			
+
 			<div class="stats-panels">
 				<div class="stats-panel">
 					<h3>🏆 Top Customers</h3>
@@ -716,7 +773,9 @@
 								<span class="rank">#{i + 1}</span>
 								<span class="customer-name">{customer.name}</span>
 								<span class="customer-phone">{formatPhone(customer.phone)}</span>
-								<span class="customer-stats">{customer.total_punches} punches · {customer.total_redeemed} rewards</span>
+								<span class="customer-stats"
+									>{customer.total_punches} punches · {customer.total_redeemed} rewards</span
+								>
 							</div>
 						{/each}
 						{#if loyaltyStats.topCustomers.length === 0}
@@ -724,7 +783,7 @@
 						{/if}
 					</div>
 				</div>
-				
+
 				<div class="stats-panel">
 					<h3>📅 Recent Activity</h3>
 					<div class="recent-activity">
@@ -735,7 +794,9 @@
 								</span>
 								<span class="activity-text">
 									{#if activity.action === 'punch'}
-										{activity.member_name} +{activity.punch_count} punch{activity.punch_count !== 1 ? 'es' : ''}
+										{activity.member_name} +{activity.punch_count} punch{activity.punch_count !== 1
+											? 'es'
+											: ''}
 									{:else if activity.action === 'redeem'}
 										{activity.member_name} redeemed reward
 									{:else}
@@ -762,7 +823,7 @@
 		padding: var(--space-lg);
 		box-shadow: var(--shadow-md);
 	}
-	
+
 	.loyalty-nav {
 		display: flex;
 		gap: var(--space-xs);
@@ -770,7 +831,7 @@
 		border-bottom: 2px solid var(--color-gray-200);
 		padding-bottom: var(--space-md);
 	}
-	
+
 	.loyalty-nav-btn {
 		padding: var(--space-sm) var(--space-md);
 		background: transparent;
@@ -781,38 +842,40 @@
 		border-radius: var(--radius-md);
 		transition: all var(--transition-fast);
 	}
-	
-	.loyalty-nav-btn:hover { background: var(--color-gray-100); }
+
+	.loyalty-nav-btn:hover {
+		background: var(--color-gray-100);
+	}
 	.loyalty-nav-btn.active {
 		background: var(--color-blue);
 		color: var(--color-white);
 	}
-	
+
 	/* Lookup Section */
 	.lookup-section {
 		display: grid;
 		gap: var(--space-lg);
 	}
-	
+
 	.lookup-panel {
 		position: relative;
 	}
-	
+
 	.lookup-panel h3 {
 		font-family: var(--font-heading);
 		margin-bottom: var(--space-md);
 	}
-	
+
 	.phone-search {
 		position: relative;
 	}
-	
+
 	.phone-input {
 		font-size: 1.25rem;
 		padding: var(--space-md);
 		letter-spacing: 0.05em;
 	}
-	
+
 	.clear-btn {
 		position: absolute;
 		right: var(--space-md);
@@ -830,9 +893,11 @@
 		justify-content: center;
 		color: var(--color-gray-600);
 	}
-	
-	.clear-btn:hover { background: var(--color-gray-300); }
-	
+
+	.clear-btn:hover {
+		background: var(--color-gray-300);
+	}
+
 	.search-results {
 		position: absolute;
 		top: 100%;
@@ -847,7 +912,7 @@
 		overflow-y: auto;
 		margin-top: var(--space-xs);
 	}
-	
+
 	.search-result {
 		display: flex;
 		align-items: center;
@@ -861,12 +926,22 @@
 		border-bottom: 1px solid var(--color-gray-100);
 		transition: background var(--transition-fast);
 	}
-	
-	.search-result:hover { background: var(--color-cream); }
-	.search-result:last-child { border-bottom: none; }
-	
-	.result-name { font-weight: 600; flex: 1; }
-	.result-phone { color: var(--color-gray-600); font-size: 0.9rem; }
+
+	.search-result:hover {
+		background: var(--color-cream);
+	}
+	.search-result:last-child {
+		border-bottom: none;
+	}
+
+	.result-name {
+		font-weight: 600;
+		flex: 1;
+	}
+	.result-phone {
+		color: var(--color-gray-600);
+		font-size: 0.9rem;
+	}
 	.result-punches {
 		background: var(--color-blue);
 		color: white;
@@ -875,23 +950,23 @@
 		font-size: 0.8rem;
 		font-weight: 600;
 	}
-	
+
 	.new-member-form {
 		margin-top: var(--space-lg);
 		padding: var(--space-lg);
 		background: var(--color-cream);
 		border-radius: var(--radius-lg);
 	}
-	
+
 	.new-member-notice {
 		font-weight: 600;
 		margin-bottom: var(--space-md);
 	}
-	
+
 	.new-member-form .form-group {
 		margin-bottom: var(--space-md);
 	}
-	
+
 	.searching-indicator {
 		display: flex;
 		align-items: center;
@@ -899,20 +974,22 @@
 		padding: var(--space-md);
 		color: var(--color-gray-600);
 	}
-	
+
 	.spinner-small {
 		width: 14px;
 		height: 14px;
-		border: 2px solid rgba(255,255,255,0.3);
+		border: 2px solid rgba(255, 255, 255, 0.3);
 		border-top-color: var(--color-blue);
 		border-radius: 50%;
 		animation: spin 0.8s linear infinite;
 	}
-	
+
 	@keyframes spin {
-		to { transform: rotate(360deg); }
+		to {
+			transform: rotate(360deg);
+		}
 	}
-	
+
 	/* Member Card */
 	.member-card {
 		background: var(--color-white);
@@ -921,12 +998,12 @@
 		padding: var(--space-xl);
 		position: relative;
 	}
-	
+
 	.member-card.reward-ready {
 		border-color: var(--color-yellow);
 		background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
 	}
-	
+
 	.reward-banner {
 		position: absolute;
 		top: 0;
@@ -941,20 +1018,20 @@
 		white-space: nowrap;
 		box-shadow: var(--shadow-md);
 	}
-	
+
 	.member-header {
 		display: flex;
 		justify-content: space-between;
 		align-items: flex-start;
 		margin-bottom: var(--space-lg);
 	}
-	
+
 	.member-name {
 		font-family: var(--font-heading);
 		font-size: 1.5rem;
 		margin-bottom: var(--space-xs);
 	}
-	
+
 	/* Inline Editing */
 	.inline-editable {
 		display: inline-flex;
@@ -969,24 +1046,24 @@
 		border-radius: var(--radius-sm);
 		transition: background var(--transition-fast);
 	}
-	
+
 	.inline-editable:hover {
 		background: var(--color-gray-100);
 		padding: var(--space-xs) var(--space-sm);
 		margin-left: calc(-1 * var(--space-sm));
 	}
-	
+
 	.inline-editable .edit-hint {
 		opacity: 0;
 		font-size: 0.8em;
 		color: var(--color-gray-400);
 		transition: opacity var(--transition-fast);
 	}
-	
+
 	.inline-editable:hover .edit-hint {
 		opacity: 1;
 	}
-	
+
 	.inline-edit-input {
 		font-size: inherit;
 		font-family: inherit;
@@ -997,7 +1074,7 @@
 		width: 100%;
 		max-width: 250px;
 	}
-	
+
 	.member-info .inline-editable,
 	.member-info .inline-edit-input {
 		display: block;
@@ -1005,28 +1082,28 @@
 		color: var(--color-gray-600);
 		margin-bottom: var(--space-xs);
 	}
-	
+
 	.member-meta {
 		font-size: 0.85rem;
 		color: var(--color-gray-500);
 	}
-	
+
 	.punch-count {
 		text-align: center;
 	}
-	
+
 	.punch-number {
 		font-family: var(--font-heading);
 		font-size: 3rem;
 		line-height: 1;
 		color: var(--color-blue);
 	}
-	
+
 	.punch-label {
 		font-size: 1.5rem;
 		color: var(--color-gray-400);
 	}
-	
+
 	/* Punch Dots */
 	.punch-dots {
 		display: flex;
@@ -1034,7 +1111,7 @@
 		gap: var(--space-sm);
 		margin-bottom: var(--space-lg);
 	}
-	
+
 	.punch-dot {
 		width: 32px;
 		height: 32px;
@@ -1043,61 +1120,66 @@
 		background: var(--color-white);
 		transition: all var(--transition-normal);
 	}
-	
+
 	.punch-dot.filled {
 		background: var(--color-blue);
 		border-color: var(--color-blue);
 		cursor: pointer;
 	}
-	
+
 	.punch-dot.filled:hover {
 		opacity: 0.8;
 	}
-	
+
 	.punch-dot.removing {
 		background: var(--color-red);
 		border-color: var(--color-red);
 		cursor: pointer;
 		animation: pulse-remove 0.5s ease-in-out infinite alternate;
 	}
-	
+
 	@keyframes pulse-remove {
-		from { opacity: 1; }
-		to { opacity: 0.6; }
+		from {
+			opacity: 1;
+		}
+		to {
+			opacity: 0.6;
+		}
 	}
-	
+
 	.punch-dot.preview {
 		background: var(--color-yellow);
 		border-color: var(--color-yellow);
 		cursor: pointer;
 	}
-	
+
 	.punch-dot:not(.filled):not(.preview):not(.removing) {
 		cursor: pointer;
 	}
-	
+
 	.punch-dot:not(.filled):not(.preview):not(.removing):hover {
 		border-color: var(--color-blue);
 		background: var(--color-gray-100);
 	}
-	
+
 	.member-card.reward-ready .punch-dot.filled:not(.removing) {
 		background: var(--color-yellow);
 		border-color: var(--color-yellow);
 	}
-	
+
 	/* Punch Actions */
-	.punch-actions, .reward-actions {
+	.punch-actions,
+	.reward-actions {
 		text-align: center;
 	}
-	
+
 	.almost-there {
 		color: var(--color-blue);
 		font-weight: 600;
 		font-size: 1.1rem;
 		margin-top: var(--space-md);
 	}
-	
+
 	.punch-input-row {
 		display: flex;
 		justify-content: center;
@@ -1105,7 +1187,7 @@
 		gap: var(--space-xs);
 		margin-bottom: var(--space-md);
 	}
-	
+
 	.punch-adjust {
 		width: 36px;
 		height: 36px;
@@ -1120,13 +1202,13 @@
 		align-items: center;
 		justify-content: center;
 	}
-	
+
 	.punch-adjust:hover {
 		border-color: var(--color-blue);
 		background: var(--color-blue);
 		color: var(--color-white);
 	}
-	
+
 	.punch-count-input {
 		width: 60px;
 		text-align: center;
@@ -1136,23 +1218,23 @@
 		border: 2px solid var(--color-gray-300);
 		border-radius: var(--radius-md);
 	}
-	
+
 	.punch-count-input:focus {
 		outline: none;
 		border-color: var(--color-blue);
 	}
-	
+
 	/* Hide number input spinners */
 	.punch-count-input::-webkit-outer-spin-button,
 	.punch-count-input::-webkit-inner-spin-button {
 		-webkit-appearance: none;
 		margin: 0;
 	}
-	.punch-count-input[type=number] {
+	.punch-count-input[type='number'] {
 		-moz-appearance: textfield;
 		appearance: textfield;
 	}
-	
+
 	.overflow-notice {
 		color: #059669;
 		font-weight: 600;
@@ -1162,13 +1244,13 @@
 		background: #d1fae5;
 		border-radius: var(--radius-md);
 	}
-	
+
 	.reward-text {
 		font-size: 1.1rem;
 		color: var(--color-gray-600);
 		margin-bottom: var(--space-md);
 	}
-	
+
 	.btn-reward {
 		background: linear-gradient(135deg, var(--color-yellow) 0%, #f59e0b 100%);
 		color: var(--color-gray-900);
@@ -1180,9 +1262,12 @@
 		display: inline-block;
 		transition: all var(--transition-fast);
 	}
-	
-	.btn-reward:hover { transform: scale(1.05); box-shadow: var(--shadow-lg); }
-	
+
+	.btn-reward:hover {
+		transform: scale(1.05);
+		box-shadow: var(--shadow-lg);
+	}
+
 	.btn-remove {
 		background: var(--color-red);
 		color: var(--color-white);
@@ -1192,13 +1277,13 @@
 		margin-bottom: var(--space-sm);
 		transition: all var(--transition-fast);
 	}
-	
-	.btn-remove:hover:not(:disabled) { 
+
+	.btn-remove:hover:not(:disabled) {
 		background: #b91c1c;
-		transform: translateY(-2px); 
-		box-shadow: var(--shadow-md); 
+		transform: translateY(-2px);
+		box-shadow: var(--shadow-md);
 	}
-	
+
 	.member-card-footer {
 		display: flex;
 		justify-content: flex-end;
@@ -1207,7 +1292,7 @@
 		padding-top: var(--space-md);
 		border-top: 1px solid var(--color-gray-200);
 	}
-	
+
 	.btn-delete-member {
 		background: transparent;
 		border: none;
@@ -1217,9 +1302,11 @@
 		cursor: pointer;
 		transition: opacity var(--transition-fast);
 	}
-	
-	.btn-delete-member:hover { opacity: 0.7; }
-	
+
+	.btn-delete-member:hover {
+		opacity: 0.7;
+	}
+
 	/* Stats Section */
 	.stats-grid {
 		display: grid;
@@ -1227,7 +1314,7 @@
 		gap: var(--space-md);
 		margin-bottom: var(--space-xl);
 	}
-	
+
 	.stat-card {
 		background: linear-gradient(135deg, var(--color-blue) 0%, #1e40af 100%);
 		color: var(--color-white);
@@ -1235,7 +1322,7 @@
 		border-radius: var(--radius-lg);
 		text-align: center;
 	}
-	
+
 	.stat-value {
 		display: block;
 		font-family: var(--font-heading);
@@ -1243,35 +1330,37 @@
 		line-height: 1;
 		margin-bottom: var(--space-xs);
 	}
-	
+
 	.stat-label {
 		font-size: 0.85rem;
 		opacity: 0.9;
 	}
-	
+
 	.stats-panels {
 		display: grid;
 		gap: var(--space-lg);
 	}
-	
+
 	.stats-panel {
 		background: var(--color-gray-100);
 		border-radius: var(--radius-lg);
 		padding: var(--space-lg);
 	}
-	
+
 	.stats-panel h3 {
 		font-family: var(--font-heading);
 		margin-bottom: var(--space-md);
 	}
-	
-	.top-customers, .recent-activity {
+
+	.top-customers,
+	.recent-activity {
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-sm);
 	}
-	
-	.top-customer-row, .activity-row {
+
+	.top-customer-row,
+	.activity-row {
 		display: flex;
 		align-items: center;
 		gap: var(--space-md);
@@ -1279,27 +1368,43 @@
 		background: var(--color-white);
 		border-radius: var(--radius-md);
 	}
-	
+
 	.rank {
 		font-weight: 700;
 		color: var(--color-blue);
 		min-width: 30px;
 	}
-	
-	.customer-name { font-weight: 600; flex: 1; }
-	.customer-phone { color: var(--color-gray-500); font-size: 0.85rem; }
-	.customer-stats { color: var(--color-gray-600); font-size: 0.85rem; }
-	
-	.activity-icon { font-size: 1.2rem; }
-	.activity-text { flex: 1; }
-	.activity-time { color: var(--color-gray-500); font-size: 0.85rem; }
-	
+
+	.customer-name {
+		font-weight: 600;
+		flex: 1;
+	}
+	.customer-phone {
+		color: var(--color-gray-500);
+		font-size: 0.85rem;
+	}
+	.customer-stats {
+		color: var(--color-gray-600);
+		font-size: 0.85rem;
+	}
+
+	.activity-icon {
+		font-size: 1.2rem;
+	}
+	.activity-text {
+		flex: 1;
+	}
+	.activity-time {
+		color: var(--color-gray-500);
+		font-size: 0.85rem;
+	}
+
 	.empty-state-small {
 		text-align: center;
 		color: var(--color-gray-500);
 		padding: var(--space-md);
 	}
-	
+
 	/* Members List */
 	.members-list {
 		display: flex;
@@ -1308,7 +1413,7 @@
 		max-height: 60vh;
 		overflow-y: auto;
 	}
-	
+
 	.member-row {
 		display: flex;
 		flex-direction: column;
@@ -1322,23 +1427,31 @@
 		cursor: pointer;
 		transition: all var(--transition-fast);
 	}
-	
+
 	.member-row:hover {
 		background: var(--color-gray-200);
 		transform: translateY(-1px);
 	}
-	
+
 	.member-row-info {
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--space-sm);
 		align-items: baseline;
 	}
-	
-	.member-row-name { font-weight: 600; }
-	.member-row-phone { color: var(--color-gray-600); font-size: 0.9rem; }
-	.member-row-email { color: var(--color-gray-500); font-size: 0.85rem; }
-	
+
+	.member-row-name {
+		font-weight: 600;
+	}
+	.member-row-phone {
+		color: var(--color-gray-600);
+		font-size: 0.9rem;
+	}
+	.member-row-email {
+		color: var(--color-gray-500);
+		font-size: 0.85rem;
+	}
+
 	.member-row-stats {
 		display: flex;
 		flex-wrap: wrap;
@@ -1346,9 +1459,12 @@
 		font-size: 0.85rem;
 		color: var(--color-gray-600);
 	}
-	
-	.member-row-punches { color: var(--color-blue); font-weight: 600; }
-	
+
+	.member-row-punches {
+		color: var(--color-blue);
+		font-weight: 600;
+	}
+
 	.empty-state {
 		text-align: center;
 		padding: var(--space-xl);
@@ -1356,7 +1472,7 @@
 		background: var(--color-white);
 		border-radius: var(--radius-lg);
 	}
-	
+
 	.sr-only {
 		position: absolute;
 		width: 1px;
@@ -1368,16 +1484,25 @@
 		white-space: nowrap;
 		border: 0;
 	}
-	
+
 	@media (min-width: 768px) {
-		.lookup-section { grid-template-columns: 1fr 1fr; }
-		.stats-panels { grid-template-columns: 1fr 1fr; }
+		.lookup-section {
+			grid-template-columns: 1fr 1fr;
+		}
+		.stats-panels {
+			grid-template-columns: 1fr 1fr;
+		}
 		.member-row {
 			flex-direction: row;
 			align-items: center;
 			justify-content: space-between;
 		}
-		.member-row-info { flex: 1; }
-		.member-row-stats { flex: 1; justify-content: center; }
+		.member-row-info {
+			flex: 1;
+		}
+		.member-row-stats {
+			flex: 1;
+			justify-content: center;
+		}
 	}
 </style>
