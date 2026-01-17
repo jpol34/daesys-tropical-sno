@@ -1911,8 +1911,8 @@
 	}
 	
 	.punch-dot.preview {
-		background: var(--color-blue-light, #93c5fd);
-		border-color: var(--color-blue);
+		background: var(--color-yellow);
+		border-color: var(--color-yellow);
 		cursor: pointer;
 	}
 	
