@@ -275,11 +275,6 @@
 			
 			punchesToAdd = 1;
 			await loadLoyaltyData();
-			
-			// Show feedback if auto-redeemed
-			if (willTriggerRedeem) {
-				alert(`🎉 Free sno cone redeemed!${carryOver > 0 ? `\n${carryOver} punch${carryOver > 1 ? 'es' : ''} carried over to new card.` : ''}`);
-			}
 		}
 		
 		onUpdatingChange(false);
