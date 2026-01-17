@@ -86,9 +86,9 @@
 						<circle cx="36" cy="36" r="4" fill="#E53935"/>
 						<!-- Empty punch hole -->
 						<circle cx="48" cy="36" r="4" fill="none" stroke="#CCCCCC" stroke-width="2" stroke-dasharray="3,2"/>
-						<!-- Star burst on free spot -->
-						<circle cx="56" cy="30" r="6" fill="#FFD600"/>
-						<text x="56" y="33" text-anchor="middle" font-size="8" font-weight="bold" fill="#E53935">★</text>
+						<!-- Star burst on free spot (aligned with row 2) -->
+						<circle cx="56" cy="36" r="5" fill="#FFD600"/>
+						<text x="56" y="39" text-anchor="middle" font-size="7" font-weight="bold" fill="#E53935">★</text>
 					</svg>
 				</div>
 				<h3>Sno Squad</h3>
