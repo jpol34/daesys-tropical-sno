@@ -47,8 +47,6 @@
 </script>
 
 <div class="share-buttons">
-	<span class="share-label">Share the menu:</span>
-	
 	<div class="share-actions">
 		{#if canShare}
 			<button 
