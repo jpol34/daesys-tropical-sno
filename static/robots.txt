@@ -1,0 +1,7 @@
+# Daesy's Tropical Sno
+User-agent: *
+Allow: /
+Disallow: /admin
+
+# Sitemap
+Sitemap: https://daesystropicalsno.com/sitemap.xml

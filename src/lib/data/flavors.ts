@@ -1,0 +1,48 @@
+// Daesy's Tropical Sno - 43 Flavors
+// Extracted from in-store menu
+
+export const flavors = [
+	'Apple',
+	'Banana',
+	'Birthday Cake',
+	'Black Cherry',
+	'Blackberry',
+	'Blood Orange',
+	'Blue Hawaiian',
+	'Blue Raspberry',
+	'Blueberry',
+	'Bubblegum',
+	'Cherry',
+	'Cinnamon',
+	'Coconut',
+	'Coffee',
+	'Cola',
+	'Cotton Candy',
+	'Cranberry',
+	'Fresh Lime',
+	'Grape',
+	'Green Apple',
+	'Guava',
+	'Kiwi',
+	'Lemon',
+	'Mango',
+	'Margarita',
+	'Orange',
+	'Passion Fruit',
+	'Peach',
+	'Pickle',
+	'Piña Colada',
+	'Pineapple',
+	'Pink Grapefruit',
+	'Pink Lemonade',
+	'Red Raspberry',
+	'Root Beer',
+	'Strawberry',
+	'Tangerine',
+	"Tiger's Blood",
+	'Tutti Frutti',
+	'Vanilla',
+	'Watermelon'
+] as const;
+
+export type Flavor = (typeof flavors)[number];
