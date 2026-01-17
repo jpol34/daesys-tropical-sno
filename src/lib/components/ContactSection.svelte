@@ -274,7 +274,7 @@
 	@media (min-width: 768px) {
 		.contact-grid {
 			grid-template-columns: 1fr 1fr;
-			align-items: start;
+			align-items: stretch;
 		}
 		
 		.contact-card {
@@ -282,12 +282,11 @@
 		}
 		
 		.contact-map {
-			min-height: 400px;
+			height: 100%;
 		}
 		
 		.contact-map iframe {
 			height: 100%;
-			min-height: 400px;
 		}
 	}
 </style>
