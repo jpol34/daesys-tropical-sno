@@ -574,36 +574,6 @@
 		isUpdating = false;
 	}
 	
-	// Edit member
-	let editingMember = $state<LoyaltyMember | null>(null);
-	
-	async function updateMember() {
-		if (!editingMember) return;
-		
-		isUpdating = true;
-		
-		const { error } = await supabase
-			.from('loyalty_members')
-			.update({
-				name: editingMember.name,
-				email: editingMember.email,
-				punches: Math.max(0, Math.min(9, editingMember.punches))
-			})
-			.eq('id', editingMember.id);
-		
-		if (!error) {
-			loyaltyMembers = loyaltyMembers.map(m => 
-				m.id === editingMember!.id ? editingMember! : m
-			);
-			if (selectedMember?.id === editingMember.id) {
-				selectedMember = editingMember;
-			}
-			editingMember = null;
-		}
-		
-		isUpdating = false;
-	}
-	
 	// Delete member
 	async function deleteMember(id: string) {
 		const member = loyaltyMembers.find(m => m.id === id);
@@ -1177,42 +1147,28 @@
 							<div class="members-section">
 								<div class="members-list">
 									{#each loyaltyMembers as member (member.id)}
-										<div class="member-row" class:editing={editingMember?.id === member.id}>
-											{#if editingMember?.id === member.id}
-												<div class="edit-member-form">
-													<input type="text" class="form-input" placeholder="Name" bind:value={editingMember.name} />
-													<input type="email" class="form-input" placeholder="Email (optional)" bind:value={editingMember.email} />
-													<div class="edit-punches">
-														<label for="edit-punches-{member.id}">Punches:</label>
-														<input id="edit-punches-{member.id}" type="number" class="form-input punch-input" min="0" max="9" bind:value={editingMember.punches} />
-													</div>
-													<div class="edit-actions">
-														<button class="btn btn-small btn-save" onclick={updateMember}>Save</button>
-														<button class="btn btn-small" onclick={() => editingMember = null}>Cancel</button>
-													</div>
-												</div>
-											{:else}
-												<div class="member-row-info">
-													<span class="member-row-name">{member.name}</span>
-													<span class="member-row-phone">{formatPhone(member.phone)}</span>
-													{#if member.email}
-														<span class="member-row-email">{member.email}</span>
-													{/if}
-												</div>
-												<div class="member-row-stats">
-													<span class="member-row-punches">{member.punches}/9 punches</span>
-													<span class="member-row-lifetime">{member.total_redeemed} rewards</span>
-													<span class="member-row-visit">Last: {formatRelativeTime(member.last_visit)}</span>
-												</div>
-												<div class="member-row-actions">
-													<button class="btn btn-small" onclick={() => { selectMember(member); loyaltyView = 'lookup'; }}>
-														View
-													</button>
-													<button class="btn btn-small btn-delete-small" onclick={() => deleteMember(member.id)}>
-														×
-													</button>
-												</div>
-											{/if}
+										<div class="member-row">
+											<div class="member-row-info">
+												<span class="member-row-name">{member.name}</span>
+												<span class="member-row-phone">{formatPhone(member.phone)}</span>
+												{#if member.email}
+													<span class="member-row-email">{member.email}</span>
+												{/if}
+											</div>
+											<div class="member-row-stats">
+												<span class="member-row-punches">{member.punches}/9 punches</span>
+												<span class="member-row-lifetime-punches">{member.total_punches} lifetime</span>
+												<span class="member-row-rewards">{member.total_redeemed} rewards</span>
+												<span class="member-row-visit">Last: {formatRelativeTime(member.last_visit)}</span>
+											</div>
+											<div class="member-row-actions">
+												<button class="btn btn-small" onclick={() => { selectMember(member); loyaltyView = 'lookup'; }}>
+													View
+												</button>
+												<button class="btn btn-small btn-delete-small" onclick={() => deleteMember(member.id)}>
+													×
+												</button>
+											</div>
 										</div>
 									{/each}
 									{#if loyaltyMembers.length === 0}
