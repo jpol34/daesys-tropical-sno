@@ -115,6 +115,7 @@
 		align-items: center;
 		gap: var(--space-sm);
 		margin-top: var(--space-md);
+		margin-bottom: var(--space-xl);
 	}
 	
 	.share-label {
