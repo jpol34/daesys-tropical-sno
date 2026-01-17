@@ -14,7 +14,7 @@
 			<div class="special-card giveaways">
 				<div class="special-icon" aria-hidden="true">🎉</div>
 				<h3>Giveaways & Raffles</h3>
-				<p>Follow us on social media for exclusive giveaways, raffles, and seasonal treats throughout the year!</p>
+				<p>Follow us on social media for exclusive giveaways, raffles and seasonal treats throughout the year!</p>
 				<div class="social-links">
 					<a 
 						href={businessInfo.social.instagram} 
