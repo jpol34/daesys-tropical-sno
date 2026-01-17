@@ -1952,12 +1952,6 @@
 		margin-bottom: var(--space-xs);
 	}
 	
-	.member-info .inline-editable:first-of-type,
-	.member-info .inline-edit-input:first-of-type {
-		font-size: 1rem;
-		color: var(--color-gray-700);
-	}
-	
 	.member-meta {
 		font-size: 0.85rem;
 		color: var(--color-gray-500);
