@@ -1072,7 +1072,6 @@
 										{/if}
 										
 										<div class="member-card-footer">
-											<button class="btn-close-member" onclick={clearSelection}>Done</button>
 											<button class="btn-delete-member" onclick={() => { if (selectedMember) deleteMember(selectedMember.id); }}>
 												🗑️ Delete Member
 											</button>
@@ -1916,23 +1915,10 @@
 	
 	.btn-reward:hover { transform: scale(1.05); box-shadow: var(--shadow-lg); }
 	
-	.btn-close-member {
-		position: absolute;
-		top: var(--space-md);
-		right: var(--space-md);
-		background: var(--color-gray-200);
-		border: none;
-		padding: var(--space-xs) var(--space-sm);
-		border-radius: var(--radius-md);
-		font-size: 0.85rem;
-		cursor: pointer;
-	}
-	
-	.btn-close-member:hover { background: var(--color-gray-300); }
 	
 	.member-card-footer {
 		display: flex;
-		justify-content: space-between;
+		justify-content: flex-end;
 		align-items: center;
 		margin-top: var(--space-lg);
 		padding-top: var(--space-md);
