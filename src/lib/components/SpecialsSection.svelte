@@ -68,7 +68,29 @@
 			
 			<!-- Sno Squad -->
 			<div class="special-card loyalty">
-				<div class="special-icon" aria-hidden="true">🎫</div>
+				<div class="special-icon punch-card-icon" aria-hidden="true">
+					<svg viewBox="0 0 64 48" width="64" height="48">
+						<!-- Card background -->
+						<rect x="2" y="4" width="60" height="40" rx="4" fill="#FFFFFF" stroke="#E53935" stroke-width="3"/>
+						<!-- Top decorative stripe -->
+						<rect x="2" y="4" width="60" height="10" rx="4" fill="#E53935"/>
+						<rect x="2" y="10" width="60" height="4" fill="#E53935"/>
+						<!-- Punch holes row 1 (filled - red) -->
+						<circle cx="12" cy="24" r="4" fill="#E53935"/>
+						<circle cx="24" cy="24" r="4" fill="#FFD600"/>
+						<circle cx="36" cy="24" r="4" fill="#1E88E5"/>
+						<circle cx="48" cy="24" r="4" fill="#E53935"/>
+						<!-- Punch holes row 2 (filled + empty) -->
+						<circle cx="12" cy="36" r="4" fill="#FFD600"/>
+						<circle cx="24" cy="36" r="4" fill="#1E88E5"/>
+						<circle cx="36" cy="36" r="4" fill="#E53935"/>
+						<!-- Empty punch hole -->
+						<circle cx="48" cy="36" r="4" fill="none" stroke="#CCCCCC" stroke-width="2" stroke-dasharray="3,2"/>
+						<!-- Star burst on free spot -->
+						<circle cx="56" cy="30" r="6" fill="#FFD600"/>
+						<text x="56" y="33" text-anchor="middle" font-size="8" font-weight="bold" fill="#E53935">★</text>
+					</svg>
+				</div>
 				<h3>Sno Squad</h3>
 				<p class="loyalty-headline">Buy 9, Get 1 FREE!</p>
 				<p class="loyalty-details">Any size · Any toppings · Or a popsicle!</p>
