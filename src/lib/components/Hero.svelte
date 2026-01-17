@@ -76,11 +76,6 @@
 		</div>
 	</div>
 	
-	<!-- Scroll indicator -->
-	<div class="scroll-indicator" aria-hidden="true">
-		<span class="scroll-text">Scroll</span>
-		<div class="scroll-arrow"></div>
-	</div>
 </section>
 
 <style>
