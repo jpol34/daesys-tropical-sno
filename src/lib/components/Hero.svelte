@@ -221,7 +221,7 @@
 		display: flex;
 		gap: var(--space-md);
 		justify-content: center;
-		margin-top: var(--space-lg);
+		margin-top: var(--space-md);
 		animation: fadeInUp 0.6s ease-out 0.5s backwards;
 	}
 	
