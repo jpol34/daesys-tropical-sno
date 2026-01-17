@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { normalizePhone, formatPhone, formatRelativeTime } from './loyalty';
+import { normalizePhone, formatPhone, formatRelativeTime } from '$lib/services/loyalty';
 
 describe('loyalty service utilities', () => {
 	describe('normalizePhone', () => {
