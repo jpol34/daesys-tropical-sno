@@ -17,7 +17,7 @@
 		'Pop Rocks',
 		'Sour Spray',
 		'Chamoy',
-		'Tajin'
+		'Tajín'
 	];
 	
 	const creamToppings = ['Vanilla', 'Coconut'];
