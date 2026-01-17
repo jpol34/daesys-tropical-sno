@@ -99,7 +99,7 @@
 		font-family: var(--font-heading);
 		font-size: 2.5rem;
 		color: var(--color-blue);
-		margin-bottom: var(--space-xs);
+		margin-bottom: 1rem;
 	}
 
 	.last-updated {
