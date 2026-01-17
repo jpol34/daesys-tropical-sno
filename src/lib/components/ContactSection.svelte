@@ -105,6 +105,10 @@
 				></iframe>
 			</div>
 		</div>
+		
+		<footer class="site-footer">
+			<p>© {new Date().getFullYear()} Daesy's Tropical Sno · <a href="/privacy">Privacy Policy</a></p>
+		</footer>
 	</div>
 </section>
 
@@ -242,6 +246,29 @@
 		transform: translateY(-2px);
 		box-shadow: var(--shadow-md);
 		color: white;
+	}
+	
+	/* Footer */
+	.site-footer {
+		margin-top: var(--space-2xl);
+		padding-top: var(--space-lg);
+		border-top: 1px solid var(--color-gray-200);
+		text-align: center;
+	}
+	
+	.site-footer p {
+		color: var(--color-gray-500);
+		font-size: 0.9rem;
+		margin: 0;
+	}
+	
+	.site-footer a {
+		color: var(--color-gray-500);
+		text-decoration: underline;
+	}
+	
+	.site-footer a:hover {
+		color: var(--color-blue);
 	}
 	
 	@media (min-width: 768px) {
