@@ -109,31 +109,31 @@
 	}
 
 	section {
-		margin-bottom: 0.5rem;
+		margin-bottom: 1rem;
 	}
 
 	h2 {
 		font-family: var(--font-heading);
 		font-size: 1.4rem;
 		color: var(--color-red);
-		margin-bottom: var(--space-sm);
+		margin-bottom: 0.25rem;
 	}
 
 	p {
 		color: var(--color-gray-700);
-		line-height: 1.7;
-		margin-bottom: var(--space-sm);
+		line-height: 1.6;
+		margin-bottom: 0.25rem;
 	}
 
 	ul {
 		color: var(--color-gray-700);
-		line-height: 1.8;
+		line-height: 1.5;
 		padding-left: var(--space-lg);
-		margin-bottom: var(--space-sm);
+		margin-bottom: 0;
 	}
 
 	li {
-		margin-bottom: var(--space-xs);
+		margin-bottom: 0;
 	}
 
 	.contact-list {
