@@ -75,7 +75,7 @@
 			</p>
 			<ul class="contact-list">
 				<li>📧 <a href="mailto:{businessInfo.email}">{businessInfo.email}</a></li>
-				<li>📞 <a href="tel:{businessInfo.phone}">{businessInfo.phoneFormatted}</a></li>
+				<li>📞 <a href="{businessInfo.phoneHref}">{businessInfo.phone}</a></li>
 			</ul>
 		</section>
 
